@@ -15,8 +15,18 @@ public class Campeonato {
 
     public Map<String, Long> contarVitoriasPorTime() {
         return partidas.stream()
-            .map(Partida::getVencedor) // agora existe
+            .map(Partida::getVencedor) 
             .filter(v -> !v.equals("Empate"))
             .collect(Collectors.groupingBy(v -> v, Collectors.counting()));
+    }
+
+      public List<Partida> getPartidasPorAno(int ano) {
+        return partidas.stream()
+            .filter(p -> {
+                String[] partes = p.getData().split("/"); 
+                int anoPartida = Integer.parseInt(partes[2]);
+                return anoPartida == ano;
+            })
+            .collect(Collectors.toList());
     }
 }
