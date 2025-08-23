@@ -131,4 +131,20 @@ public class AnaliseEstatistica {
             .toList();
     }
 
+    // TOP N vitórias em casa (geral)
+    public List<Time> topVitoriasMandante(int top) {
+     return gerarTimes().values().stream()
+            .sorted(Comparator.comparingInt(Time::getVitoriasMandante).reversed())
+            .limit(top)
+            .toList();
+    }
+
+    // TOP N vitórias fora (geral)
+    public List<Time> topVitoriasVisitante(int top) {
+     return gerarTimes().values().stream()
+            .sorted(Comparator.comparingInt(Time::getVitoriasVisitante).reversed())
+            .limit(top)
+            .toList();
+    }
+
 }

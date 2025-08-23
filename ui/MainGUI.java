@@ -33,8 +33,8 @@ public class MainGUI extends JFrame {
         JButton btnSaldo = new JButton("Saldo de Gols");
         JButton btnMelhorDefesa = new JButton("Melhor Defesa (ano)");
         JButton btnMelhorAtaque = new JButton("Melhor Ataque (ano)");
-        JButton btnVitoriasMandante = new JButton("Vitórias Casa");
-        JButton btnVitoriasVisitante = new JButton("Vitórias Fora");
+        JButton btnVitoriasMandante = new JButton("Top Vitórias Casa");
+        JButton btnVitoriasVisitante = new JButton("Top Vitórias Fora");
 
         campoAno = new JTextField(6);
         topo.add(new JLabel("Ano:"));
@@ -66,7 +66,7 @@ public class MainGUI extends JFrame {
         btnPontos.addActionListener(e -> desenharGrafico(campeonato.getClassificacaoPorPontos(), "pontos"));
         btnSaldo.addActionListener(e -> desenharGrafico(campeonato.getClassificacaoPorSaldoGols(), "saldoGols"));
 
-        // Botão Melhor Defesa - TOP 5 por ano
+        // Melhor Defesa - TOP 5 por ano
         btnMelhorDefesa.addActionListener(e -> {
             try {
                 int ano = Integer.parseInt(campoAno.getText().trim());
@@ -81,7 +81,7 @@ public class MainGUI extends JFrame {
             }
         });
 
-        // Botão Melhor Ataque - TOP 5 por ano
+        // Melhor Ataque - TOP 5 por ano
         btnMelhorAtaque.addActionListener(e -> {
             try {
                 int ano = Integer.parseInt(campoAno.getText().trim());
@@ -96,10 +96,13 @@ public class MainGUI extends JFrame {
             }
         });
 
+        // Top 5 vitórias em casa - geral
         btnVitoriasMandante.addActionListener(e ->
-                desenharGrafico(List.of(analise.maisVitoriasMandanteGeral()), "vitoriasMandante"));
+                desenharGrafico(analise.topVitoriasMandante(5), "vitoriasMandante"));
+
+        // Top 5 vitórias fora - geral
         btnVitoriasVisitante.addActionListener(e ->
-                desenharGrafico(List.of(analise.maisVitoriasVisitanteGeral()), "vitoriasVisitante"));
+                desenharGrafico(analise.topVitoriasVisitante(5), "vitoriasVisitante"));
 
         setVisible(true);
     }
