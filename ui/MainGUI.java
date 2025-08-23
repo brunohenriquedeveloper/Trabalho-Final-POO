@@ -107,52 +107,117 @@ public class MainGUI extends JFrame {
         setVisible(true);
     }
 
-    private void desenharGrafico(List<Time> lista, String tipo) {
-        Graphics g = painelGrafico.getGraphics();
-        g.clearRect(0, 0, painelGrafico.getWidth(), painelGrafico.getHeight());
+   private void desenharGrafico(List<Time> lista, String tipo) {
+    Graphics2D g2 = (Graphics2D) painelGrafico.getGraphics();
+    g2.clearRect(0, 0, painelGrafico.getWidth(), painelGrafico.getHeight());
 
-        int largura = painelGrafico.getWidth();
-        int altura = painelGrafico.getHeight();
+    int largura = painelGrafico.getWidth();
+    int altura = painelGrafico.getHeight();
+    int margem = 50;
+    int numBarras = Math.min(lista.size(), 20);
+    int larguraBarra = (largura - 2 * margem) / numBarras;
 
-        int max = 0;
-        for (Time t : lista) {
-            switch (tipo) {
-                case "golsPro": if (t.getGolsPro() > max) max = t.getGolsPro(); break;
-                case "pontos": if (t.getPontuacao() > max) max = t.getPontuacao(); break;
-                case "saldoGols": if (t.getSaldoGols() > max) max = t.getSaldoGols(); break;
-                case "vitoriasMandante": if (t.getVitoriasMandante() > max) max = t.getVitoriasMandante(); break;
-                case "vitoriasVisitante": if (t.getVitoriasVisitante() > max) max = t.getVitoriasVisitante(); break;
-                case "defesa": if (t.getGolsContra() > max) max = t.getGolsContra(); break;
-                case "ataque": if (t.getGolsPro() > max) max = t.getGolsPro(); break;
+    if (tipo.equals("saldoGols")) {
+        int max = lista.stream().mapToInt(Time::getSaldoGols).max().orElse(1);
+        int min = lista.stream().mapToInt(Time::getSaldoGols).min().orElse(0);
+        if (max == min) max++; // evita divisão por zero
+        int zeroY = altura - margem - (int)((0 - min) / (double)(max - min) * (altura - 2 * margem));
+
+        for (int i = 0; i < numBarras; i++) {
+            Time t = lista.get(i);
+            int valor = t.getSaldoGols();
+            int barraAltura = (int)(Math.abs(valor) / (double)(max - min) * (altura - 2 * margem));
+            int x = margem + i * larguraBarra;
+            int y = valor >= 0 ? zeroY - barraAltura : zeroY;
+
+            // Cor da barra
+            g2.setColor(valor >= 0 ? new Color(241, 196, 15) : Color.RED);
+            g2.fillRect(x, y, larguraBarra - 5, barraAltura);
+            g2.setColor(Color.BLACK);
+            g2.drawRect(x, y, larguraBarra - 5, barraAltura);
+
+            // Valor da barra
+            g2.drawString(String.valueOf(valor), x, valor >= 0 ? y - 5 : y + barraAltura + 15);
+
+            // Nome do time - sempre logo abaixo da barra, com pequena margem
+            String nome = t.getNome();
+            int yNome = valor >= 0 ? zeroY + 20 : zeroY + barraAltura + 32; // 5px de margem
+            int larguraTexto = g2.getFontMetrics().stringWidth(nome);
+            if (larguraBarra < larguraTexto) {
+                g2.rotate(-Math.PI / 4, x + larguraBarra / 2, yNome);
+                g2.drawString(nome, x + larguraBarra / 4, yNome);
+                g2.rotate(Math.PI / 4, x + larguraBarra / 2, yNome);
+            } else {
+                g2.drawString(nome, x, yNome);
             }
         }
-        if (max == 0) max = 1;
 
-        int margem = 50;
-        int numBarras = Math.min(lista.size(), 20);
-        int larguraBarra = (largura - 2 * margem) / numBarras;
+        // Linha zero
+        g2.setColor(Color.DARK_GRAY);
+        g2.drawLine(margem, zeroY, largura - margem, zeroY);
+
+    } else {
+        // Mantém o estilo original para os outros gráficos
+        Color corBarra = switch (tipo) {
+            case "golsPro", "ataque" -> new Color(52, 152, 219); // Azul
+            case "pontos" -> new Color(46, 204, 113); // Verde
+            case "vitoriasMandante" -> new Color(230, 126, 34); // Laranja
+            case "vitoriasVisitante" -> new Color(231, 76, 60); // Vermelho
+            case "defesa" -> new Color(155, 89, 182); // Roxo
+            default -> Color.GRAY;
+        };
+
+        int max = lista.stream().mapToInt(t -> switch (tipo) {
+            case "golsPro", "ataque" -> t.getGolsPro();
+            case "pontos" -> t.getPontuacao();
+            case "vitoriasMandante" -> t.getVitoriasMandante();
+            case "vitoriasVisitante" -> t.getVitoriasVisitante();
+            case "defesa" -> t.getGolsContra();
+            default -> 0;
+        }).max().orElse(1);
 
         for (int i = 0; i < numBarras; i++) {
             Time t = lista.get(i);
             int valor = switch (tipo) {
-                case "golsPro" -> t.getGolsPro();
+                case "golsPro", "ataque" -> t.getGolsPro();
                 case "pontos" -> t.getPontuacao();
-                case "saldoGols" -> t.getSaldoGols();
                 case "vitoriasMandante" -> t.getVitoriasMandante();
                 case "vitoriasVisitante" -> t.getVitoriasVisitante();
                 case "defesa" -> t.getGolsContra();
-                case "ataque" -> t.getGolsPro();
                 default -> 0;
             };
+
             int alturaBarra = (int) ((double) valor / max * (altura - 2 * margem));
             int x = margem + i * larguraBarra;
             int y = altura - margem - alturaBarra;
 
-            g.setColor(Color.BLUE);
-            g.fillRect(x, y, larguraBarra - 5, alturaBarra);
-            g.setColor(Color.BLACK);
-            g.drawString(t.getNome(), x, altura - margem + 15);
-            g.drawString(String.valueOf(valor), x, y - 5);
+            g2.setColor(corBarra);
+            g2.fillRect(x, y, larguraBarra - 5, alturaBarra);
+            g2.setColor(Color.BLACK);
+            g2.drawRect(x, y, larguraBarra - 5, alturaBarra);
+            g2.drawString(String.valueOf(valor), x, y - 5);
+
+            // Nome do time
+            String nome = t.getNome();
+            int larguraTexto = g2.getFontMetrics().stringWidth(nome);
+            int yNome = altura - margem + 15;
+            if (larguraBarra < larguraTexto) {
+                g2.rotate(-Math.PI / 4, x + larguraBarra / 2, yNome);
+                g2.drawString(nome, x + larguraBarra / 4, yNome);
+                g2.rotate(Math.PI / 4, x + larguraBarra / 2, yNome);
+            } else {
+                g2.drawString(nome, x, yNome);
+            }
+        }
+
+        // Linhas de referência
+        g2.setColor(Color.DARK_GRAY);
+        for (int i = 1; i <= 3; i++) {
+            int yLinha = altura - margem - (int) ((altura - 2 * margem) * i / 4.0);
+            g2.drawLine(margem, yLinha, largura - margem, yLinha);
+            g2.drawString(String.valueOf(max * i / 4), 5, yLinha + 5);
         }
     }
+}
+
 }
