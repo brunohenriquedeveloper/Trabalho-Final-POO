@@ -11,6 +11,11 @@ public class Time {
     private int golsPro = 0;
     private int golsContra = 0;
 
+    // Novos atributos para estatísticas adicionais
+    private int vitoriasMandante = 0;
+    private int vitoriasVisitante = 0;
+    private int partidasJogadas = 0;
+
     public Time(String nome, String tecnico, String estado) {
         this.nome = nome;
         this.tecnico = tecnico;
@@ -22,15 +27,30 @@ public class Time {
         if (p.getMandante().equals(nome)) {
             golsPro += p.getPlacarMandante();
             golsContra += p.getPlacarVisitante();
-            if (p.getVencedor().equals(nome)) vitorias++;
-            else if (p.getVencedor().equals("Empate")) empates++;
-            else derrotas++;
+            partidasJogadas++;
+
+            if (p.getVencedor().equals(nome)) {
+                vitorias++;
+                vitoriasMandante++;
+            } else if (p.getVencedor().equals("Empate")) {
+                empates++;
+            } else {
+                derrotas++;
+            }
+
         } else if (p.getVisitante().equals(nome)) {
             golsPro += p.getPlacarVisitante();
             golsContra += p.getPlacarMandante();
-            if (p.getVencedor().equals(nome)) vitorias++;
-            else if (p.getVencedor().equals("Empate")) empates++;
-            else derrotas++;
+            partidasJogadas++;
+
+            if (p.getVencedor().equals(nome)) {
+                vitorias++;
+                vitoriasVisitante++;
+            } else if (p.getVencedor().equals("Empate")) {
+                empates++;
+            } else {
+                derrotas++;
+            }
         }
     }
 
@@ -42,18 +62,27 @@ public class Time {
         return golsPro - golsContra;
     }
 
-    public int getGolsPro() {
-     return golsPro;
+    public double getMediaGolsSofridos() {
+        return partidasJogadas > 0 ? (double) golsContra / partidasJogadas : 0.0;
     }
 
-    public int getGolsContra() {
-     return golsContra;
-    }
+    public int getGolsPro() { return golsPro; }
+
+    public int getGolsContra() { return golsContra; }
+
+    public int getVitoriasMandante() { return vitoriasMandante; }
+
+    public int getVitoriasVisitante() { return vitoriasVisitante; }
 
     public String getNome() { return nome; }
 
     @Override
     public String toString() {
-        return nome + " - Pontos: " + getPontuacao() + ", Gols: " + golsPro + ":" + golsContra + ", Saldo: " + getSaldoGols();
+        return nome + " - Pontos: " + getPontuacao() +
+                ", Gols: " + golsPro + ":" + golsContra +
+                ", Saldo: " + getSaldoGols() +
+                ", Vitórias Casa: " + vitoriasMandante +
+                ", Vitórias Fora: " + vitoriasVisitante +
+                ", Média Gols Sofridos: " + String.format("%.2f", getMediaGolsSofridos());
     }
 }
