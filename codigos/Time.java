@@ -42,6 +42,14 @@ public class Time {
         return golsPro - golsContra;
     }
 
+    public int getGolsPro() {
+     return golsPro;
+    }
+
+    public int getGolsContra() {
+     return golsContra;
+    }
+
     public String getNome() { return nome; }
 
     @Override

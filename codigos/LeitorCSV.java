@@ -14,33 +14,50 @@ public class LeitorCSV {
         List<Partida> partidas = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminho, StandardCharsets.UTF_8))) {
-            String linha = br.readLine(); 
+            String linha = br.readLine(); // pula cabeçalho
+
             while ((linha = br.readLine()) != null) {
                 if (linha.isBlank()) continue;
 
-                String[] dados = linha.split(";", -1);
+                // Divide por vírgula (CSV real)
+                String[] dados = linha.split(",", -1);
 
-                String mandante = dados[1].trim();
-                String visitante = dados[2].trim();
-                String estadio = dados[3].trim();
-                String data = dados[4].trim();
-                String hora = dados[5].trim();
-                String vencedor = dados[6].trim();
-                int placarMandante = Integer.parseInt(dados[7].trim());
-                int placarVisitante = Integer.parseInt(dados[8].trim());
+                // Garante que a linha tem todas as colunas necessárias
+                if (dados.length < 16) continue;
 
+                // Remove aspas e espaços de todas as colunas
+                for (int i = 0; i < dados.length; i++) {
+                    dados[i] = dados[i].replace("\"", "").trim();
+                }
+
+                // Extrai informações da linha
+                String mandante = dados[4];
+                String visitante = dados[5];
+                String estadio = dados[11];
+                String data = dados[2];
+                String hora = dados[3];
+                String vencedor = dados[10];
+                int placarMandante = Integer.parseInt(dados[12]);
+                int placarVisitante = Integer.parseInt(dados[13]);
+                String estadoMandante = dados[14];
+                String estadoVisitante = dados[15];
+
+                // Cria objeto Partida
                 Partida p = new Partida(
                         mandante, visitante, estadio, data, hora,
                         vencedor, placarMandante, placarVisitante
                 );
                 partidas.add(p);
 
-                times.putIfAbsent(mandante, new Time(mandante, null, null));
-                times.putIfAbsent(visitante, new Time(visitante, null, null));
+                // Atualiza mapa de times
+                times.putIfAbsent(mandante, new Time(mandante, "", estadoMandante));
+                times.putIfAbsent(visitante, new Time(visitante, "", estadoVisitante));
 
+                // Atualiza estatísticas de cada time
                 times.get(mandante).atualizarEstatisticas(p);
                 times.get(visitante).atualizarEstatisticas(p);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
