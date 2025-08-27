@@ -166,32 +166,37 @@ public class MainGUI extends JFrame {
     }
 
     private void desenharGraficoHorizontal(List<Time> lista, String tipo) {
-        Graphics2D g2 = (Graphics2D) painelGrafico.getGraphics();
-        g2.clearRect(0, 0, painelGrafico.getWidth(), painelGrafico.getHeight());
+    Graphics2D g2 = (Graphics2D) painelGrafico.getGraphics();
+    g2.clearRect(0, 0, painelGrafico.getWidth(), painelGrafico.getHeight());
 
-        int largura = painelGrafico.getWidth();
-        int altura = painelGrafico.getHeight();
-        int margem = 50;
-        int numBarras = Math.min(lista.size(), 20);
-        int alturaBarra = (altura - 2 * margem) / numBarras;
+    int largura = painelGrafico.getWidth();
+    int altura = painelGrafico.getHeight();
+    int margem = 50;
+    int margemDireita = 100; // espaço extra para nomes
+    int numBarras = Math.min(lista.size(), 20);
+    int alturaBarra = (altura - 2 * margem) / numBarras;
 
-        Color corBarra = pegarCor(tipo);
-        int max = lista.stream().mapToInt(t -> pegarValor(t, tipo)).max().orElse(1);
+    Color corBarra = pegarCor(tipo);
+    int max = lista.stream().mapToInt(t -> pegarValor(t, tipo)).max().orElse(1);
 
-        for (int i = 0; i < numBarras; i++) {
-            Time t = lista.get(i);
-            int valor = pegarValor(t, tipo);
-            int larguraBarra = (int) ((double) valor / max * (largura - 2 * margem));
-            int x = margem;
-            int y = margem + i * alturaBarra;
+    for (int i = 0; i < numBarras; i++) {
+        Time t = lista.get(i);
+        int valor = pegarValor(t, tipo);
+        // Limitar largura para não ultrapassar a margem direita
+        int larguraBarra = (int) ((double) valor / max * (largura - 2 * margem - margemDireita));
+        int x = margem;
+        int y = margem + i * alturaBarra;
 
-            g2.setColor(corBarra);
-            g2.fillRect(x, y, larguraBarra, alturaBarra - 5);
-            g2.setColor(Color.BLACK);
-            g2.drawRect(x, y, larguraBarra, alturaBarra - 5);
-            g2.drawString(t.getNome() + " (" + valor + ")", x + larguraBarra + 5, y + alturaBarra - 10);
-        }
+        g2.setColor(corBarra);
+        g2.fillRect(x, y, larguraBarra, alturaBarra - 5);
+
+        g2.setColor(Color.BLACK);
+        g2.drawRect(x, y, larguraBarra, alturaBarra - 5);
+
+        // Escrever nome + valor à direita da barra
+        g2.drawString(t.getNome() + " (" + valor + ")", x + larguraBarra + 5, y + alturaBarra - 10);
     }
+}
 
     private void desenharGraficoLinhas(List<Time> lista, String tipo) {
     Graphics2D g2 = (Graphics2D) painelGrafico.getGraphics();
