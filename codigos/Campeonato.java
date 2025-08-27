@@ -74,4 +74,19 @@ public class Campeonato {
                 })
                 .collect(Collectors.toList());
     }
+
+    // Retorna lista de times ordenada pelas vitórias como mandante
+public List<Time> getClassificacaoPorVitoriasMandante() {
+    return times.values().stream()
+            .sorted((a, b) -> b.getVitoriasMandante() - a.getVitoriasMandante())
+            .collect(Collectors.toList());
+}
+
+// Retorna lista de times ordenada pelas vitórias como visitante
+public List<Time> getClassificacaoPorVitoriasVisitante() {
+    return times.values().stream()
+            .sorted((a, b) -> b.getVitoriasVisitante() - a.getVitoriasVisitante())
+            .collect(Collectors.toList());
+}
+
 }
