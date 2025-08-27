@@ -9,7 +9,6 @@ if TYPE_CHECKING:
 class LeitorCSV:
     @staticmethod
     def carregarPartidas(caminho: str, times: Dict[str, "Time"]) -> List["Partida"]:
-
         from .Partida import Partida
         from .Time import Time
 
@@ -17,12 +16,11 @@ class LeitorCSV:
 
         with open(caminho, encoding="utf-8") as f:
             leitor = csv.reader(f)
-            next(leitor, None) 
+            next(leitor, None)  # pular cabeçalho
 
             for linha in leitor:
                 if not linha or len(linha) < 16:
                     continue
-
 
                 dados = [col.replace('"', '').strip() for col in linha]
 
@@ -54,13 +52,12 @@ class LeitorCSV:
                 )
                 partidas.append(p)
 
-                
+                # Criar ou atualizar times
                 if mandante not in times:
                     times[mandante] = Time(nome=mandante, tecnico="", estado=estadoMandante)
                 if visitante not in times:
                     times[visitante] = Time(nome=visitante, tecnico="", estado=estadoVisitante)
 
-                
                 times[mandante].atualizarEstatisticas(p)
                 times[visitante].atualizarEstatisticas(p)
 
