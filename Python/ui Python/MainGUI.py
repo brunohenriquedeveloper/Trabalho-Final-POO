@@ -56,6 +56,8 @@ class MainGui(QtWidgets.QMainWindow):
             topo.addWidget(btn)
 
         self.plotWidget = pg.PlotWidget()
+        # define o background inicial branco
+        self.plotWidget.setBackground("w")
         mainLayout.addWidget(self.plotWidget)
 
         self.pizzaContainer = QWidget()
@@ -102,7 +104,6 @@ class MainGui(QtWidgets.QMainWindow):
 
         self.show()
 
-    # -------------------- Métodos auxiliares --------------------
     def pegarValor(self, time: Time, tipo: str) -> int:
         return {
             "golsPro": time.golsPro,
@@ -140,26 +141,23 @@ class MainGui(QtWidgets.QMainWindow):
         except ValueError:
             QtWidgets.QMessageBox.warning(self, "Erro", "Digite um ano válido!")
 
-    # -------------------- Desenho de gráficos --------------------
     def desenharGrafico(self, lista, tipo, estilo="bar"):
-        # caso pizza
+        plotItem = self.plotWidget.getPlotItem()
+        plotItem.getViewBox().invertY(False)
+
         if estilo == "pie":
             self.plotWidget.hide()
             self.pizzaContainer.show()
             self.mostrarPizza(lista, tipo)
             return
 
-        # barra ou linha
         self.pizzaContainer.hide()
         self.plotWidget.show()
-        plotItem = self.plotWidget.getPlotItem()
         plotItem.clear()
 
-        # pega referências aos eixos
         bottom_axis = plotItem.getAxis('bottom')
         left_axis   = plotItem.getAxis('left')
 
-        # define quais eixos aparecem
         if estilo == "barh":
             plotItem.showAxis('left')
             plotItem.hideAxis('bottom')
@@ -167,13 +165,11 @@ class MainGui(QtWidgets.QMainWindow):
             plotItem.showAxis('bottom')
             plotItem.showAxis('left')
 
-        # limpa ticks do eixo que não será usado para categorias
         if estilo == "barh":
             bottom_axis.setTicks([])
         else:
             left_axis.setTicks([])
 
-        # margens para caber rótulos
         if estilo == "bar":
             plotItem.layout.setContentsMargins(40, 10, 10, 120)
         elif estilo == "barh":
@@ -181,14 +177,12 @@ class MainGui(QtWidgets.QMainWindow):
         else:
             plotItem.layout.setContentsMargins(40, 10, 10, 120)
 
-        self.plotWidget.setBackground("w")
         self.plotWidget.showGrid(x=True, y=True, alpha=0.3)
 
         nomes   = [t.nome for t in lista]
         valores = [self.pegarValor(t, tipo) for t in lista]
         brush   = pg.mkBrush(*self.pegarCor(tipo))
 
-        # Top 10
         pares = sorted(zip(nomes, valores), key=lambda nv: nv[1], reverse=True)[:10]
         nomes, valores = zip(*pares)
         max_val = max(valores) * 1.1
@@ -218,6 +212,8 @@ class MainGui(QtWidgets.QMainWindow):
             plotItem.enableAutoRange(False, False)
 
         elif estilo == "barh":
+            plotItem.getViewBox().invertY(True)
+
             bg = pg.BarGraphItem(
                 y=range(len(valores)), x0=0, x1=valores,
                 height=0.6, brush=brush
@@ -237,7 +233,7 @@ class MainGui(QtWidgets.QMainWindow):
                 txt.setPos(v, i)
                 self.plotWidget.addItem(txt)
 
-            self.plotWidget.setYRange(-0.5, len(valores) - 0.5)
+            self.plotWidget.setYRange(len(valores) - 0.5, -0.5)
             self.plotWidget.setXRange(0, max_val)
             plotItem.enableAutoRange(False, False)
 
@@ -266,7 +262,6 @@ class MainGui(QtWidgets.QMainWindow):
             self.plotWidget.setYRange(0, max_val)
             plotItem.enableAutoRange(False, False)
 
-    # -------------------- Pizza --------------------
     def mostrarPizza(self, lista, tipo):
         for i in reversed(range(self.pizzaLayout.count())):
             w = self.pizzaLayout.itemAt(i).widget()
@@ -290,6 +285,7 @@ class MainGui(QtWidgets.QMainWindow):
         canvas = FigureCanvas(fig)
         self.pizzaLayout.addWidget(canvas)
         canvas.draw()
+
 
 
 if __name__ == "__main__":
