@@ -10,6 +10,7 @@ from codigosPython.AnaliseEstatistica import AnaliseEstatistica
 from codigosPython.Time import Time
 from codigosPython.LeitorCSV import LeitorCSV
 
+
 class MainGui(QtWidgets.QMainWindow):
     def __init__(self, campeonato: Campeonato):
         super().__init__()
@@ -101,7 +102,8 @@ class MainGui(QtWidgets.QMainWindow):
     def desenharGrafico(self, lista, tipo, estilo="bar"):
         self.plotWidget.clear()
         self.plotWidget.show()
-        self.plotWidget.setBackground('w')  # fundo branco
+        self.plotWidget.setBackground('w')
+        self.plotWidget.showGrid(x=True, y=True, alpha=0.3)
 
         nomes = [t.nome for t in lista]
         valores = [self.pegarValor(t, tipo) for t in lista]
@@ -109,20 +111,34 @@ class MainGui(QtWidgets.QMainWindow):
         brush = pg.mkBrush(*cor)
 
         if estilo == "bar":
-            bg = pg.BarGraphItem(x=range(len(valores)), height=valores, width=0.6, brush=brush)
+            # Barras mais gordinhas
+            bg = pg.BarGraphItem(x=range(len(valores)), height=valores, width=0.8, brush=brush)
             self.plotWidget.addItem(bg)
 
-        # Rótulos rotacionados abaixo das barras
-            for i, nome in enumerate(nomes):
-                text = pg.TextItem(text=nome, anchor=(0.5, 1.0), angle=-45, color=(0, 0, 0))
-                text.setFont(QtGui.QFont("Arial", 9))
-                text.setPos(i, 0)
+            for i, (nome, valor) in enumerate(zip(nomes, valores)):
+                # Ajusta posição do nome se o valor da barra for pequeno
+                if valor < 370:
+                    y_pos_nome = valor + 20  # acima da barra
+                    anchor_nome = (0.5, 0.0)
+                else:
+                    y_pos_nome = valor / 2   # dentro da barra
+                    anchor_nome = (0.5, 0.5)
+
+                # Nome do time
+                text = pg.TextItem(text=nome, anchor=anchor_nome, color=(0, 0, 0), angle=90)
+                text.setFont(QtGui.QFont("Arial", 9, QtGui.QFont.Bold))
+                text.setPos(i, y_pos_nome)
                 self.plotWidget.addItem(text)
 
-        # Eixo X com nomes
+                # Valor da barra
+                valor_txt = pg.TextItem(text=str(valor), anchor=(0.5, -0.3), color=(0, 0, 0))
+                valor_txt.setFont(QtGui.QFont("Arial", 9))
+                valor_txt.setPos(i, valor)
+                self.plotWidget.addItem(valor_txt)
+
+            # Remove os ticks do eixo X
             ax = self.plotWidget.getAxis('bottom')
-            ax.setTicks([list(zip(range(len(nomes)), nomes))])
-            ax.setStyle(showValues=True)
+            ax.setTicks([])
 
         elif estilo == "barh":
             bg = pg.BarGraphItem(y=range(len(valores)), x0=0, x1=valores, height=0.6, brush=brush)
@@ -134,14 +150,11 @@ class MainGui(QtWidgets.QMainWindow):
 
         elif estilo == "line":
             self.plotWidget.plot(range(len(valores)), valores, pen=pg.mkPen(*cor, width=2), symbol='o')
-
-        # Rótulos nos pontos
             for i, valor in enumerate(valores):
                 text = pg.TextItem(text=str(valor), anchor=(0.5, -1.0), color=(0, 0, 0))
                 text.setFont(QtGui.QFont("Arial", 9))
                 text.setPos(i, valor)
                 self.plotWidget.addItem(text)
-
             ax = self.plotWidget.getAxis('bottom')
             ax.setTicks([list(zip(range(len(nomes)), nomes))])
             ax.setStyle(showValues=True)
@@ -158,7 +171,8 @@ class MainGui(QtWidgets.QMainWindow):
         cores = [tuple(pg.intColor(i, hues=len(lista)).getRgb()[:3]) for i in range(len(lista))]
         cores = [(r/255, g/255, b/255) for r,g,b in cores]
 
-        plt.figure(figsize=(6,6))
+        plt.figure(figsize=(6,6), facecolor="w")
+        plt.gca().set_facecolor("w")
         plt.pie(valores, labels=nomes, autopct="%1.1f%%", colors=cores)
         plt.show()
 
