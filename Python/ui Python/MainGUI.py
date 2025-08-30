@@ -1,17 +1,11 @@
 import sys
 import os
-import math
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 import pyqtgraph as pg
-from PyQt5.QtWidgets import (
-    QLineEdit, QLabel, QPushButton,
-    QHBoxLayout, QVBoxLayout, QWidget
-)
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 
 from codigosPython.Campeonato import Campeonato
 from codigosPython.AnaliseEstatistica import AnaliseEstatistica
@@ -28,25 +22,26 @@ class MainGui(QtWidgets.QMainWindow):
         self.setWindowTitle("Campeonato Brasileiro – Estatísticas")
         self.setGeometry(100, 100, 1200, 650)
 
-        central = QWidget()
+        central = QtWidgets.QWidget()
         self.setCentralWidget(central)
-        mainLayout = QVBoxLayout(central)
+        mainLayout = QtWidgets.QVBoxLayout(central)
 
-        topo = QHBoxLayout()
+        # Topo com ano e botões
+        topo = QtWidgets.QHBoxLayout()
         mainLayout.addLayout(topo)
 
-        self.campoAno = QLineEdit()
+        self.campoAno = QtWidgets.QLineEdit()
         self.campoAno.setFixedWidth(60)
-        topo.addWidget(QLabel("Ano:"))
+        topo.addWidget(QtWidgets.QLabel("Ano:"))
         topo.addWidget(self.campoAno)
 
-        self.btnGols = QPushButton("Ranking de Gols")
-        self.btnPontos = QPushButton("Mais Pontos")
-        self.btnSaldo = QPushButton("Saldo de Gols")
-        self.btnMelhorDefesa = QPushButton("Melhor Defesa (ano)")
-        self.btnMelhorAtaque = QPushButton("Melhor Ataque (ano)")
-        self.btnVitMand = QPushButton("Top Vitórias Casa")
-        self.btnVitVis = QPushButton("Top Vitórias Fora")
+        self.btnGols = QtWidgets.QPushButton("Ranking de Gols")
+        self.btnPontos = QtWidgets.QPushButton("Mais Pontos")
+        self.btnSaldo = QtWidgets.QPushButton("Saldo de Gols")
+        self.btnMelhorDefesa = QtWidgets.QPushButton("Melhor Defesa (ano)")
+        self.btnMelhorAtaque = QtWidgets.QPushButton("Melhor Ataque (ano)")
+        self.btnVitMand = QtWidgets.QPushButton("Top Vitórias Casa")
+        self.btnVitVis = QtWidgets.QPushButton("Top Vitórias Fora")
 
         for btn in (
             self.btnGols, self.btnPontos, self.btnSaldo,
@@ -55,16 +50,17 @@ class MainGui(QtWidgets.QMainWindow):
         ):
             topo.addWidget(btn)
 
+        # Área de gráficos
         self.plotWidget = pg.PlotWidget()
-        # define o background inicial branco
         self.plotWidget.setBackground("w")
         mainLayout.addWidget(self.plotWidget)
 
-        self.pizzaContainer = QWidget()
-        self.pizzaLayout = QVBoxLayout(self.pizzaContainer)
+        self.pizzaContainer = QtWidgets.QWidget()
+        self.pizzaLayout = QtWidgets.QVBoxLayout(self.pizzaContainer)
         mainLayout.addWidget(self.pizzaContainer)
         self.pizzaContainer.hide()
 
+        # Conexões
         self.btnGols.clicked.connect(lambda:
             self.desenharGrafico(
                 self.campeonato.getClassificacaoPorGols(),
@@ -156,7 +152,7 @@ class MainGui(QtWidgets.QMainWindow):
         plotItem.clear()
 
         bottom_axis = plotItem.getAxis('bottom')
-        left_axis   = plotItem.getAxis('left')
+        left_axis = plotItem.getAxis('left')
 
         if estilo == "barh":
             plotItem.showAxis('left')
@@ -179,9 +175,9 @@ class MainGui(QtWidgets.QMainWindow):
 
         self.plotWidget.showGrid(x=True, y=True, alpha=0.3)
 
-        nomes   = [t.nome for t in lista]
+        nomes = [t.nome for t in lista]
         valores = [self.pegarValor(t, tipo) for t in lista]
-        brush   = pg.mkBrush(*self.pegarCor(tipo))
+        brush = pg.mkBrush(*self.pegarCor(tipo))
 
         pares = sorted(zip(nomes, valores), key=lambda nv: nv[1], reverse=True)[:10]
         nomes, valores = zip(*pares)
@@ -196,10 +192,7 @@ class MainGui(QtWidgets.QMainWindow):
 
             ax = bottom_axis
             ax.setTicks([list(zip(range(len(nomes)), nomes))])
-            ax.setStyle(
-                tickFont=QtGui.QFont("Arial", 8),
-                tickTextOffset=10
-            )
+            ax.setStyle(tickFont=QtGui.QFont("Arial", 8), tickTextOffset=10)
 
             for i, v in enumerate(valores):
                 txt = pg.TextItem(str(v), anchor=(0.5, -0.3), color=(0, 0, 0))
@@ -213,7 +206,6 @@ class MainGui(QtWidgets.QMainWindow):
 
         elif estilo == "barh":
             plotItem.getViewBox().invertY(True)
-
             bg = pg.BarGraphItem(
                 y=range(len(valores)), x0=0, x1=valores,
                 height=0.6, brush=brush
@@ -222,10 +214,7 @@ class MainGui(QtWidgets.QMainWindow):
 
             ay = left_axis
             ay.setTicks([list(zip(range(len(nomes)), nomes))])
-            ay.setStyle(
-                tickFont=QtGui.QFont("Arial", 8),
-                tickTextOffset=10
-            )
+            ay.setStyle(tickFont=QtGui.QFont("Arial", 8), tickTextOffset=10)
 
             for i, v in enumerate(valores):
                 txt = pg.TextItem(str(v), anchor=(0, 0.5), color=(0, 0, 0))
@@ -247,10 +236,7 @@ class MainGui(QtWidgets.QMainWindow):
 
             ax = bottom_axis
             ax.setTicks([list(zip(x, nomes))])
-            ax.setStyle(
-                tickFont=QtGui.QFont("Arial", 8),
-                tickTextOffset=10
-            )
+            ax.setStyle(tickFont=QtGui.QFont("Arial", 8), tickTextOffset=10)
 
             for i, v in enumerate(valores):
                 txt = pg.TextItem(str(v), anchor=(0.5, -1.0), color=(0, 0, 0))
@@ -263,6 +249,7 @@ class MainGui(QtWidgets.QMainWindow):
             plotItem.enableAutoRange(False, False)
 
     def mostrarPizza(self, lista, tipo):
+        # Remove widgets antigos
         for i in reversed(range(self.pizzaLayout.count())):
             w = self.pizzaLayout.itemAt(i).widget()
             if w:
@@ -270,22 +257,31 @@ class MainGui(QtWidgets.QMainWindow):
 
         nomes = [t.nome for t in lista]
         valores = [self.pegarValor(t, tipo) for t in lista]
-        cores = [
-            tuple(pg.intColor(i, hues=len(lista)).getRgb()[:3])
-            for i in range(len(lista))
-        ]
-        cores = [(r/255, g/255, b/255) for r, g, b in cores]
+        total = sum(valores)
 
-        fig = Figure(figsize=(6, 6), facecolor="w")
-        ax = fig.add_subplot(111)
-        ax.set_facecolor("w")
-        ax.pie(valores, labels=nomes, autopct="%1.1f%%", colors=cores)
-        fig.tight_layout()
+        series = QPieSeries()
+        for i, (nome, valor) in enumerate(zip(nomes, valores)):
+            # Label no formato pedido: Nome XX.X% | YY gols
+            label = f"{nome} {valor/total*100:.1f}% | {valor} gols"
+            slice = QPieSlice(label, valor)
+            color = pg.intColor(i, hues=len(lista))
+            slice.setBrush(QtGui.QColor(*color.getRgb()[:3]))
+            slice.setLabelVisible(True)
+            slice.setLabelColor(QtGui.QColor(0, 0, 0))
+            series.append(slice)
 
-        canvas = FigureCanvas(fig)
-        self.pizzaLayout.addWidget(canvas)
-        canvas.draw()
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle(f"Melhor {tipo.capitalize()} por Time")
 
+        # Legenda lateral
+        legend = chart.legend()
+        legend.setVisible(True)
+        legend.setAlignment(QtCore.Qt.AlignRight)
+
+        chartView = QChartView(chart)
+        chartView.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.pizzaLayout.addWidget(chartView)
 
 
 if __name__ == "__main__":
