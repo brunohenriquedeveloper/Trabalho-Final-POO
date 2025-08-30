@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class LeitorCSV {
 
+    public static List<Partida> caminhoCsv;
+
     public static List<Partida> carregarPartidas(String caminho, Map<String, Time> times) {
         List<Partida> partidas = new ArrayList<>();
 

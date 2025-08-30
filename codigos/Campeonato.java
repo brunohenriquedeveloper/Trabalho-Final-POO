@@ -24,6 +24,7 @@ public class Campeonato {
         }
     }
 
+
     public void adicionarPartida(Partida partida) {
         partidas.add(partida);
 
