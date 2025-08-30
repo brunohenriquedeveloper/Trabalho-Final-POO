@@ -24,23 +24,15 @@ public class Partida {
         this.placarVisitante = placarVisitante;
     }
 
-    // Getters e setters
+    // Getters
     public String getMandante() { return mandante; }
-    public void setMandante(String mandante) { this.mandante = mandante; }
     public String getVisitante() { return visitante; }
-    public void setVisitante(String visitante) { this.visitante = visitante; }
     public String getEstadio() { return estadio; }
-    public void setEstadio(String estadio) { this.estadio = estadio; }
     public String getData() { return data; }
-    public void setData(String data) { this.data = data; }
     public String getHora() { return hora; }
-    public void setHora(String hora) { this.hora = hora; }
     public String getVencedor() { return vencedor; }
-    public void setVencedor(String vencedor) { this.vencedor = vencedor; }
     public int getPlacarMandante() { return placarMandante; }
-    public void setPlacarMandante(int placarMandante) { this.placarMandante = placarMandante; }
     public int getPlacarVisitante() { return placarVisitante; }
-    public void setPlacarVisitante(int placarVisitante) { this.placarVisitante = placarVisitante; }
 
     @Override
     public String toString() {
