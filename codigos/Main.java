@@ -8,7 +8,7 @@ public class Main {
         Map<String, Time> times = new LinkedHashMap<>();
 
 
-        List<Partida> partidas = LeitorCsv.carregarPartidas(caminhoCsv, times);
+        List<Partida> partidas = LeitorCSV.carregarPartidas(caminhoCsv, times);
 
 
         Campeonato camp = new Campeonato(partidas, times);
