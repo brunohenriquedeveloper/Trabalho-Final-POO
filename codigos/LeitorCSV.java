@@ -19,9 +19,7 @@ public class LeitorCsv {
             while ((linha = br.readLine()) != null) {
                 if (linha.isBlank()) continue;
 
-                // Divide por vírgula
-                String[] dados = linha.split(",", -1);
-
+                String[] dados = linha.split(",", -1); // divide por vírgula, mantendo campos vazios
                 if (dados.length < 16) continue;
 
                 // Remove aspas e espaços
@@ -30,6 +28,7 @@ public class LeitorCsv {
                 }
 
                 // Extrai informações
+                int id = Integer.parseInt(dados[0]); // pega o ID do CSV
                 String mandante = dados[4];
                 String visitante = dados[5];
                 String estadio = dados[11];
@@ -43,18 +42,25 @@ public class LeitorCsv {
 
                 // Cria objeto Partida
                 Partida p = new Partida(
-                        mandante, visitante, estadio, data, hora,
-                        vencedor, placarMandante, placarVisitante
+                        id,
+                        mandante,
+                        visitante,
+                        estadio,
+                        data,
+                        hora,
+                        vencedor,
+                        placarMandante,
+                        placarVisitante
                 );
                 partidas.add(p);
 
-                // Atualiza mapa de times
+                // Atualiza mapa de times (somente cria, não calcula estatísticas)
                 times.putIfAbsent(mandante, new Time(mandante, "", estadoMandante));
                 times.putIfAbsent(visitante, new Time(visitante, "", estadoVisitante));
 
-                // Atualiza estatísticas
-                times.get(mandante).atualizarEstatisticas(p);
-                times.get(visitante).atualizarEstatisticas(p);
+                // ❌ Remove atualização aqui!
+                // times.get(mandante).atualizarEstatisticas(p);
+                // times.get(visitante).atualizarEstatisticas(p);
             }
 
         } catch (IOException e) {

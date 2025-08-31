@@ -1,5 +1,7 @@
 package codigos;
 
+import java.util.Objects;
+
 public class Partida {
 
     private int id;
@@ -14,6 +16,7 @@ public class Partida {
 
     // --------- Construtor ---------
     public Partida(
+            int id,
             String mandante,
             String visitante,
             String estadio,
@@ -23,6 +26,7 @@ public class Partida {
             int placarMandante,
             int placarVisitante
     ) {
+        this.id = id;
         this.mandante = mandante;
         this.visitante = visitante;
         this.estadio = estadio;
@@ -34,6 +38,10 @@ public class Partida {
     }
 
     // --------- Getters ---------
+    public int getId() {
+        return id;
+    }
+
     public String getMandante() {
         return mandante;
     }
@@ -66,12 +74,32 @@ public class Partida {
         return placarVisitante;
     }
 
+    // --------- Equals e HashCode para detectar duplicatas ---------
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Partida partida = (Partida) o;
+        return id == partida.id ||
+                (Objects.equals(mandante, partida.mandante) &&
+                 Objects.equals(visitante, partida.visitante) &&
+                 Objects.equals(data, partida.data) &&
+                 placarMandante == partida.placarMandante &&
+                 placarVisitante == partida.placarVisitante);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, mandante, visitante, data, placarMandante, placarVisitante);
+    }
+
     // --------- Representação textual ---------
     @Override
     public String toString() {
-        return mandante + " " +
+        return "Partida #" + id + ": " +
+               mandante + " " +
                placarMandante + " x " +
                placarVisitante + " " +
-               visitante;
+               visitante + " (" + data + ")";
     }
 }

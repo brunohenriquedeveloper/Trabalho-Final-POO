@@ -25,9 +25,8 @@ public class Time {
 
     // --------- Atualiza estatísticas ---------
     public void atualizarEstatisticas(Partida p) {
-
         if (p.getMandante().equals(nome)) {
-
+            // estatísticas como mandante
             golsPro += p.getPlacarMandante();
             golsContra += p.getPlacarVisitante();
             partidasJogadas++;
@@ -42,7 +41,7 @@ public class Time {
             }
 
         } else if (p.getVisitante().equals(nome)) {
-
+            // estatísticas como visitante
             golsPro += p.getPlacarVisitante();
             golsContra += p.getPlacarMandante();
             partidasJogadas++;
@@ -59,6 +58,10 @@ public class Time {
     }
 
     // --------- Getters ---------
+    public String getNome() {
+        return nome;
+    }
+
     public int getVitorias() {
         return vitorias;
     }
@@ -91,19 +94,40 @@ public class Time {
         return partidasJogadas;
     }
 
-    public String getNome() {
-        return nome;
+    // --------- Setters ---------
+    public void setVitorias(int vitorias) {
+        this.vitorias = vitorias;
     }
 
-    public String getTecnico() {
-        return tecnico;
+    public void setEmpates(int empates) {
+        this.empates = empates;
     }
 
-    public String getEstado() {
-        return estado;
+    public void setDerrotas(int derrotas) {
+        this.derrotas = derrotas;
     }
 
-    // --------- Calculados ---------
+    public void setGolsPro(int golsPro) {
+        this.golsPro = golsPro;
+    }
+
+    public void setGolsContra(int golsContra) {
+        this.golsContra = golsContra;
+    }
+
+    public void setVitoriasMandante(int vitoriasMandante) {
+        this.vitoriasMandante = vitoriasMandante;
+    }
+
+    public void setVitoriasVisitante(int vitoriasVisitante) {
+        this.vitoriasVisitante = vitoriasVisitante;
+    }
+
+    public void setPartidasJogadas(int partidasJogadas) {
+        this.partidasJogadas = partidasJogadas;
+    }
+
+    // --------- Estatísticas calculadas ---------
     public int getPontuacao() {
         return vitorias * 3 + empates;
     }
@@ -113,20 +137,25 @@ public class Time {
     }
 
     public double getMediaGolsSofridos() {
-        return partidasJogadas > 0 ? (double) golsContra / partidasJogadas : 0.0;
+        return partidasJogadas > 0
+                ? (double) golsContra / partidasJogadas
+                : 0.0;
     }
 
     // --------- Representação textual ---------
     @Override
     public String toString() {
         return nome + " (" + estado + ")" +
-               " - Pontos: " + getPontuacao() +
-               ", Jogos: " + partidasJogadas +
-               " (V: " + vitorias + ", E: " + empates + ", D: " + derrotas + ")" +
-               ", Gols: " + golsPro + ":" + golsContra +
-               ", Saldo: " + getSaldoGols() +
-               ", Vitórias Casa: " + vitoriasMandante +
-               ", Vitórias Fora: " + vitoriasVisitante +
-               ", Média Gols Sofridos: " + String.format("%.2f", getMediaGolsSofridos());
+                " – Pontos: " + getPontuacao() +
+                ", Jogos: " + partidasJogadas +
+                " (V: " + vitorias +
+                ", E: " + empates +
+                ", D: " + derrotas + ")" +
+                ", Gols: " + golsPro + ":" + golsContra +
+                ", Saldo: " + getSaldoGols() +
+                ", Vitórias Casa: " + vitoriasMandante +
+                ", Vitórias Fora: " + vitoriasVisitante +
+                ", Média Sofridos: " +
+                String.format("%.2f", getMediaGolsSofridos());
     }
 }
