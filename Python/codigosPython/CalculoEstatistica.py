@@ -1,7 +1,6 @@
 from typing import List, Dict, Optional
 from .AnaliseEstatistica import AnaliseEstatistica
 from .Time import Time
-from copy import deepcopy
 
 class CalculoEstatistica(AnaliseEstatistica):
     def __init__(self, campeonato):
