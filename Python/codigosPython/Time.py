@@ -16,7 +16,6 @@ class Time:
         self._vitoriasVisitante = 0
         self._partidasJogadas = 0
 
-    # Getters
     @property
     def nome(self) -> str:
         return self._nome

@@ -19,7 +19,6 @@ class Partida:
         self._placarMandante = placarMandante
         self._placarVisitante = placarVisitante
 
-    # Getters e Setters
     @property
     def mandante(self) -> str:
         return self._mandante
