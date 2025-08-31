@@ -1,6 +1,6 @@
 <h1 align="center"> Trabalho Final POO 💻</h1>
 
-<p align="center">
+<p align="center"> •
   <a href="#tema">Tema do Projeto</a> •
   <a href="#discussao">Discussão</a> •
   <a href="#python">OO Python</a> •
