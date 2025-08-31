@@ -45,7 +45,7 @@
 
 <h2 id="tema">Tema do Projeto 📈</h2>
 
-Este projeto realiza uma análise exploratória dos dados do Campeonato Brasileiro de Futebol. A partir de um arquivo CSV contendo os resultados das partidas, o sistema processa e organiza as informações para gerar visualizações gráficas diversas. Essas visualizações permitem identificar padrões, tendências e estatísticas relevantes, como desempenho das equipes, Ranking de gols, O time que fez mais pontuações desde o início do arquivo csv, a melhor defesa e o melhor ataque ao longo da competição. O objetivo é fornecer uma visão clara e intuitiva dos dados, facilitando a interpretação e a tomada de decisões baseadas em informações concretas do campeonato.
+Este projeto realiza uma análise exploratória dos dados do Campeonato Brasileiro de Futebol. A partir de um arquivo CSV contendo os resultados das partidas, o sistema processa e organiza as informações para gerar visualizações gráficas diversas. Essas visualizações permitem identificar padrões, tendências e estatísticas relevantes, como desempenho das equipes, Ranking de gols, o time que fez mais pontuações desde o início da contabilização dos dados no arquivo csv, a melhor defesa e o melhor ataque ao longo da competição. O objetivo é fornecer uma visão clara e intuitiva dos dados, facilitando a interpretação e a tomada de decisões baseadas em informações concretas do campeonato.
 
 
 
@@ -57,7 +57,7 @@ O ponto de entrada do programa é a classe Main, que funciona como controlador d
 
 A classe LeitorCSV é responsável por toda a lógica de leitura e interpretação do CSV, transformando cada linha em objetos do domínio, como Time e Partida. Ela garante que cada time seja criado uma única vez e que as estatísticas sejam atualizadas corretamente à medida que as partidas são processadas. Além disso, contém métodos auxiliares para lidar com conversões de tipos, limpeza de caracteres e tratamento de dados ausentes, uma vez que a falta desses tratamentos podem causar bugs e até mesmo gerar resultados inconsistentes. Ao isolar a lógica de leitura em uma classe dedicada, o projeto segue os princípios de encapsulamento e coesão, evitando repetição de código e facilitando a manutenção.
 
-As classes Time e Partida foram desenvolvidas como elementos centrais do domínio do Campeonato Brasileiro de Futebol, com foco na organização clara dos dados e na manutenção da integridade das informações. A classe Time é responsável por representar cada clube, armazenando dados básicos como nome, técnico (mesmo não sendo utilizada por nós, optamos por declará-la para manter a coesão) e estado, bem como estatísticas de desempenho, incluindo vitórias, empates, derrotas, gols marcados e sofridos, vitórias em casa e fora, e partidas jogadas. Ela também possui métodos que permitem atualizar automaticamente essas estatísticas sempre que uma nova partida é registrada, calcular métricas importantes como pontuação e saldo de gols e apresentar um resumo legível do estado do time.
+As classes Time e Partida foram desenvolvidas como elementos centrais do domínio do Campeonato Brasileiro de Futebol, com foco na organização clara dos dados e na manutenção da integridade das informações. A classe Time é responsável por representar cada clube, armazenando dados básicos como nome, técnico (mesmo esse atributo não sendo utilizado por nós, optamos por declará-la para manter a coesão) e estado, bem como estatísticas de desempenho, incluindo vitórias, empates, derrotas, gols marcados e sofridos, vitórias em casa e fora, e partidas jogadas. Ela também possui métodos que permitem atualizar automaticamente essas estatísticas sempre que uma nova partida é registrada, calcular métricas importantes como pontuação e saldo de gols e apresentar um resumo legível do estado do time.
 
 Por outro lado, a classe Partida encapsula os dados de cada jogo, registrando informações essenciais como mandante, visitante e gols marcados por cada equipe. Essa abordagem garante que cada partida seja tratada de forma isolada, mantendo coerência e confiabilidade nos dados ao longo de todo o programa.
 
@@ -85,7 +85,7 @@ Em Python, o encapsulamento foi implementado por meio de convenções de nomes, 
 
 O projeto também faz uso de herança e polimorfismo. A classe abstrata AnaliseEstatistica define métodos genéricos de análise, enquanto a classe CalculoEstatistica implementa esses métodos de forma concreta, permitindo a criação de diferentes tipos de análises sem a necessidade de alterar a estrutura principal do sistema. Esse uso de herança e polimorfismo é equivalente ao que foi aplicado na versão Java, onde classes abstratas e concretas separam o núcleo do cálculo estatístico da interface e da leitura de dados, demonstrando consistência na aplicação dos princípios de POO nas duas linguagens. A interface gráfica em Python, construída com PyQt, é modular e independente da lógica de análise ou leitura de dados, recebendo apenas listas de objetos Time e o tipo de métrica a ser exibida, garantindo que a renderização e interação com o usuário estejam separadas da lógica de negócios, assim como ocorre na versão Java com Swing.
 
-Quando comparamos Python e Java no contexto do mesmo projeto, é possível observar tanto semelhanças quanto diferenças significativas. Em termos de semelhanças, ambas as linguagens seguem rigorosamente os princípios de POO, incluindo encapsulamento, abstração, modularidade e responsabilidade única. As classes de domínio (Time, Partida, Campeonato) mantêm a mesma função em ambas as versões, organizando dados e métodos relacionados, permitindo um modelo de domínio consistente e compreensível. A lógica de análise estatística é isolada em classes separadas (CalculoEstatistica em Python e CalculoAnaliseEstatistica em Java), evidenciando o uso de herança e polimorfismo. As interfaces gráficas em ambas as linguagens consomem dados de objetos de domínio e análise sem alterar a lógica interna, garantindo a separação de responsabilidades.
+Quando comparamos Python e Java no contexto do mesmo projeto, é possível observar tanto semelhanças quanto diferenças significativas. Em termos de semelhanças, ambas as linguagens seguem rigorosamente os princípios de POO, incluindo encapsulamento, herança, abstração, modularidade e responsabilidade única. As classes de domínio (Time, Partida, Campeonato) mantêm a mesma função em ambas as versões, organizando dados e métodos relacionados, permitindo um modelo de domínio consistente e compreensível. A lógica de análise estatística é isolada em classes separadas (CalculoEstatistica em Python e CalculoAnaliseEstatistica em Java), evidenciando o uso de herança e polimorfismo. As interfaces gráficas em ambas as linguagens consomem dados de objetos de domínio e análise sem alterar a lógica interna, garantindo a separação de responsabilidades.
 
 Em termos de diferenças, Python apresenta uma sintaxe mais concisa e expressiva, permitindo manipulação direta de listas e dicionários de objetos, ordenações e filtragens com lambda e list comprehensions, enquanto Java exige declarações de tipos explícitos, loops mais detalhados e getters/setters formais. O encapsulamento em Python é baseado em convenções, ao passo que em Java é aplicado de forma rigorosa através de modificadores de acesso. A construção de interfaces gráficas em Python com PyQt é mais declarativa e flexível, enquanto Java Swing demanda configuração detalhada de layouts, listeners e componentes. Além disso, Python permite maior expressividade em menos linhas de código, tornando a implementação de análises estatísticas mais enxuta e legível, embora a lógica central e os princípios de POO permaneçam equivalentes em ambas as linguagens.
 
@@ -96,7 +96,7 @@ Em resumo, o projeto em Python demonstra que os conceitos de POO podem ser aplic
 <h2 id="tutorial">Tutorial 💡</h2>
 Se você chegou até esta seção, é provável que tenha encontrado alguma dificuldade para executar a aplicação corretamente. Para facilitar esse processo, este tutorial apresenta um passo a passo de como rodar o projeto, tanto na versão Java quanto na versão Python.
 
-O projeto está organizado em duas partes principais:
+O projeto está organizado em pastas principais:
 
 Códigos Java: contemplam toda a lógica de cálculo, as classes modulares e os componentes que processam os dados por trás da interface.
 
@@ -104,15 +104,15 @@ UI (Interface Gráfica em Java): nesta pasta encontram-se os arquivos relacionad
 
 Códigos Python: correspondem à versão Python do projeto, contendo as classes modulares responsáveis pelos cálculos, leitura de CSV e manipulação dos dados.
 
-UIPython: pasta destinada à interface gráfica em Python, que funciona de forma semelhante à interface Swing no Java.
+UI Python: pasta destinada à interface gráfica em Python, que funciona de forma semelhante à interface Swing no Java.
 
 <h3>Como rodar em Java 🍵:</h3>
 
-Para executar a versão Java, não é necessário compreender todos os detalhes internos das classes. Basta localizar o arquivo AppGUI e executá-lo. Esse arquivo inicializa toda a aplicação e abrirá a interface gráfica construída em Swing.
+Para executar a versão Java, não é necessário compreender todos os detalhes internos das classes. Basta localizar o arquivo AppGUI, que se encontra na pasta ui, e executá-lo. Esse arquivo inicializa toda a aplicação e abrirá a interface gráfica construída em Swing.
 
 Na interface, existem dois tipos principais de botões:
 
-Botões gerais: exibem gráficos diretamente ao serem clicados, sem necessidade de entrada adicional.
+Botões gerais: exibem gráficos diretamente ao serem clicados, sem necessidade de entrada adicional, basicamente, esses botões se referem aos dados gerais e não dependem do ano para a plotagem do gráfico, como por exemplo: ranking por gols, saldo de gols, mais pontos conquistados, e top vitorias como mandante/visitante.
 
 Botões que dependem de ano: nesses casos, é necessário informar o ano desejado para que o gráfico seja gerado corretamente, já que determinadas estatísticas (como melhor defesa ou melhor ataque) variam a cada edição do Campeonato Brasileiro.
 
@@ -120,13 +120,13 @@ Assim, de forma intuitiva, você poderá interagir com os gráficos e explorar a
 
 <h3>Como rodar em Python 🐛:</h3>
 
-No caso da versão Python, a execução exige um pequeno passo adicional em relação à versão Java. Todos os códigos relacionados à lógica estão dentro da pasta Python, enquanto a interface gráfica está localizada na pasta uiPython.
+No caso da versão Python, a execução exige um pequeno passo adicional em relação à versão Java. Todos os códigos relacionados à lógica estão dentro da pasta Python, enquanto a interface gráfica está localizada na pasta ui Python.
 
 Para rodar a interface gráfica em Python, siga os passos:
 
 1 - Abra o terminal.
-2 - Navegue até a pasta onde se encontra o arquivo MainGUI.py (ou o nome equivalente utilizado). Para isso, utilize o comando cd seguido do caminho da pasta.
-3- Execute o seguinte comando no terminal: python MainGUI.py
+2 - Navegue até a pasta onde se encontra o arquivo MainGUI.py (ou o nome equivalente utilizado). Para isso, utilize o comando cd seguido do caminho da pasta. Ex: cd "C:\Users\Bruno\Documents\Trabalho-Final-POO\Python\ui Python"
+3- Execute o seguinte comando no terminal: python MainGUI.py, ou caso vc tenha renomeado o arquivo, digite python + nome do arquivo renomeado
 
 Ao rodar esse comando, a interface gráfica será aberta e funcionará de maneira muito próxima à versão em Java. Assim como no Swing, os botões que exibem estatísticas gerais mostram resultados imediatos ao clique, enquanto aqueles que dependem de ano exigem a inserção de um valor correspondente à edição do campeonato.
 
