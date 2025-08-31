@@ -2,6 +2,7 @@ package ui;
 
 import codigos.Campeonato;
 import codigos.Time;
+import codigos.CalculoEstatistica;
 import codigos.AnaliseEstatistica;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class MainGUI extends JFrame {
     public MainGUI(Campeonato campeonato) {
         super("Campeonato Brasileiro – Estatísticas");
         this.campeonato = campeonato;
-        this.analise = new AnaliseEstatistica(campeonato);
+        this.analise = new CalculoEstatistica(campeonato);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 650);
@@ -139,7 +140,6 @@ public class MainGUI extends JFrame {
         Color corBarra = pegarCor(tipo);
         int max = lista.stream().mapToInt(t -> pegarValor(t, tipo)).max().orElse(1);
 
-        // Linhas de referência sutis
         int numCheckpoints = 5;
         g2.setColor(new Color(200, 200, 200, 80));
         g2.setStroke(new BasicStroke(1f));
@@ -148,7 +148,6 @@ public class MainGUI extends JFrame {
             g2.drawLine(margem, yLinha, largura - margem, yLinha);
         }
 
-        // Fonte negrito para todos os textos
         g2.setFont(new Font("SansSerif", Font.BOLD, 12));
 
         for (int i = 0; i < numBarras; i++) {
@@ -158,19 +157,16 @@ public class MainGUI extends JFrame {
             int x = margem + i * larguraBarra;
             int y = altura - margem - alturaBarra;
 
-            // Barra
             g2.setColor(corBarra);
             g2.fillRect(x, y, larguraBarra - 5, alturaBarra);
             g2.setColor(Color.BLACK);
             g2.drawRect(x, y, larguraBarra - 5, alturaBarra);
 
-            // Valor
             g2.setColor(Color.DARK_GRAY);
             String valorStr = String.valueOf(valor);
             int valorLarg = g2.getFontMetrics().stringWidth(valorStr);
             g2.drawString(valorStr, x + (larguraBarra - 5 - valorLarg) / 2, y - 5);
 
-            // Nome vertical sobreposto à barra
             String nome = t.getNome();
             int nomeLarg = g2.getFontMetrics().stringWidth(nome);
             int xNome = x + (larguraBarra - 5) / 2;
@@ -211,7 +207,6 @@ public class MainGUI extends JFrame {
             g2.setColor(Color.BLACK);
             g2.drawRect(x, y, larguraBarra, alturaBarra - 5);
 
-            // Nome + valor
             g2.setColor(Color.DARK_GRAY);
             g2.drawString(t.getNome() + " (" + valor + ")", x + larguraBarra + 5, y + alturaBarra - 10);
         }

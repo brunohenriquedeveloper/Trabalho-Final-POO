@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class LeitorCSV {
+public class LeitorCsv {
 
     public static List<Partida> carregarPartidas(String caminho, Map<String, Time> times) {
         List<Partida> partidas = new ArrayList<>();
@@ -19,24 +19,23 @@ public class LeitorCSV {
             while ((linha = br.readLine()) != null) {
                 if (linha.isBlank()) continue;
 
-                // Divide por vírgula (CSV real)
+                // Divide por vírgula
                 String[] dados = linha.split(",", -1);
 
-                // Garante que a linha tem todas as colunas necessárias
                 if (dados.length < 16) continue;
 
-                // Remove aspas e espaços de todas as colunas
+                // Remove aspas e espaços
                 for (int i = 0; i < dados.length; i++) {
                     dados[i] = dados[i].replace("\"", "").trim();
                 }
 
-                // Extrai informações da linha
+                // Extrai informações
                 String mandante = dados[4];
                 String visitante = dados[5];
                 String estadio = dados[11];
                 String data = dados[2];
                 String hora = dados[3];
-                String vencedor = dados[10];
+                String vencedor = "-".equals(dados[10]) ? "Empate" : dados[10];
                 int placarMandante = Integer.parseInt(dados[12]);
                 int placarVisitante = Integer.parseInt(dados[13]);
                 String estadoMandante = dados[14];
@@ -53,7 +52,7 @@ public class LeitorCSV {
                 times.putIfAbsent(mandante, new Time(mandante, "", estadoMandante));
                 times.putIfAbsent(visitante, new Time(visitante, "", estadoVisitante));
 
-                // Atualiza estatísticas de cada time
+                // Atualiza estatísticas
                 times.get(mandante).atualizarEstatisticas(p);
                 times.get(visitante).atualizarEstatisticas(p);
             }
