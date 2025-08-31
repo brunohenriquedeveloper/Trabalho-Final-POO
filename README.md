@@ -14,8 +14,10 @@
       <h4><em>Ranking de Gols - Swing</em></h4>
       <img width="800px" src="/img/RankingGolsSwing.png">
     </td>
+    </tr>
+    <tr>
     <td>
-      <h4><em>Melhor Ataque - Swing</em></h4>
+      <h4><em>Melhor Ataque (ano) - Swing</em></h4>
       <img width="800px" src="/img/MelhorAtaqueSwing.png">
     </td>
   </tr>
@@ -104,7 +106,7 @@ Códigos Python: correspondem à versão Python do projeto, contendo as classes 
 
 UIPython: pasta destinada à interface gráfica em Python, que funciona de forma semelhante à interface Swing no Java.
 
-<h3>Como rodar em Java</h3>
+<h3>Como rodar em Java 🍵:</h3>
 
 Para executar a versão Java, não é necessário compreender todos os detalhes internos das classes. Basta localizar o arquivo AppGUI e executá-lo. Esse arquivo inicializa toda a aplicação e abrirá a interface gráfica construída em Swing.
 
@@ -116,7 +118,7 @@ Botões que dependem de ano: nesses casos, é necessário informar o ano desejad
 
 Assim, de forma intuitiva, você poderá interagir com os gráficos e explorar as estatísticas do campeonato diretamente na tela.
 
-<h3>Como rodar em Python</h3>
+<h3>Como rodar em Python 🐛:</h3>
 
 No caso da versão Python, a execução exige um pequeno passo adicional em relação à versão Java. Todos os códigos relacionados à lógica estão dentro da pasta Python, enquanto a interface gráfica está localizada na pasta uiPython.
 
