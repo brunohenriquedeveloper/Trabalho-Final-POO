@@ -6,7 +6,7 @@ from copy import deepcopy
 class CalculoEstatistica(AnaliseEstatistica):
     def __init__(self, campeonato):
         super().__init__(campeonato)
-        # Cria todos os times de uma vez, acumulando estatísticas de todos os jogos
+
         self._times: Dict[str, Time] = {}
         for p in self.campeonato.getPartidas():
             if p.mandante not in self._times:
@@ -16,7 +16,6 @@ class CalculoEstatistica(AnaliseEstatistica):
             self._times[p.mandante].atualizarEstatisticas(p)
             self._times[p.visitante].atualizarEstatisticas(p)
 
-    # ======= MÉTODOS GERAIS =======
     def gerarTimes(self) -> Dict[str, Time]:
         return self._times
 
@@ -56,9 +55,8 @@ class CalculoEstatistica(AnaliseEstatistica):
         times = list(self._times.values())
         times.sort(key=lambda t: t.vitoriasVisitante, reverse=True)
         return times[:top]
+    
 
-    # ======= MÉTODOS POR ANO =======
-    # Cria cópias temporárias de Time para não mexer nos totais gerais
     def gerarTimesPorAno(self, ano: int) -> Dict[str, Time]:
         times: Dict[str, Time] = {}
         partidasDoAno = self.campeonato.getPartidasPorAno(ano)

@@ -25,7 +25,6 @@ class MainGui(QtWidgets.QMainWindow):
         self.setCentralWidget(central)
         mainLayout = QtWidgets.QVBoxLayout(central)
 
-        # Topo com ano e botões
         topo = QtWidgets.QHBoxLayout()
         mainLayout.addLayout(topo)
 
@@ -49,7 +48,6 @@ class MainGui(QtWidgets.QMainWindow):
         ):
             topo.addWidget(btn)
 
-        # Área de gráficos
         self.plotWidget = pg.PlotWidget()
         self.plotWidget.setBackground("w")
         mainLayout.addWidget(self.plotWidget)
@@ -59,7 +57,6 @@ class MainGui(QtWidgets.QMainWindow):
         mainLayout.addWidget(self.pizzaContainer)
         self.pizzaContainer.hide()
 
-        # Conexões
         self.btnGols.clicked.connect(lambda:
             self.desenharGrafico(
                 self.analise.melhorAtaqueGeral(10),
@@ -150,11 +147,10 @@ class MainGui(QtWidgets.QMainWindow):
         self.plotWidget.show()
         plotItem.clear()
 
-        # Ordenação consistente: melhores à esquerda e limite de itens
         if estilo == "line":
-            if tipo == "defesa":  # menor é melhor
+            if tipo == "defesa": 
                 lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo))[:10]
-            elif tipo == "saldoGols":  # maior é melhor, top 10
+            elif tipo == "saldoGols": 
                 lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo), reverse=True)[:10]
             else:
                 lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo), reverse=True)[:20]
@@ -238,7 +234,7 @@ class MainGui(QtWidgets.QMainWindow):
             self.plotWidget.setXRange(0, max_val)
             plotItem.enableAutoRange(False, False)
 
-        else:  # line
+        else:  
             x = list(range(len(valores)))
             self.plotWidget.plot(
                 x, valores,
@@ -256,7 +252,7 @@ class MainGui(QtWidgets.QMainWindow):
                 self.plotWidget.addItem(txt)
 
             self.plotWidget.setXRange(-0.5, len(valores) - 0.5)
-            self.plotWidget.setYRange(0, max(valores)*1.1)  # margem de 10%
+            self.plotWidget.setYRange(0, max(valores)*1.1)  
             plotItem.enableAutoRange(False, False)
 
     def mostrarPizza(self, lista, tipo):

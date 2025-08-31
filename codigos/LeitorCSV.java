@@ -14,21 +14,19 @@ public class LeitorCsv {
         List<Partida> partidas = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminho, StandardCharsets.UTF_8))) {
-            String linha = br.readLine(); // pula cabeçalho
+            String linha = br.readLine();
 
             while ((linha = br.readLine()) != null) {
                 if (linha.isBlank()) continue;
 
-                String[] dados = linha.split(",", -1); // divide por vírgula, mantendo campos vazios
+                String[] dados = linha.split(",", -1); 
                 if (dados.length < 16) continue;
 
-                // Remove aspas e espaços
                 for (int i = 0; i < dados.length; i++) {
                     dados[i] = dados[i].replace("\"", "").trim();
                 }
 
-                // Extrai informações
-                int id = Integer.parseInt(dados[0]); // pega o ID do CSV
+                int id = Integer.parseInt(dados[0]); 
                 String mandante = dados[4];
                 String visitante = dados[5];
                 String estadio = dados[11];
@@ -40,7 +38,6 @@ public class LeitorCsv {
                 String estadoMandante = dados[14];
                 String estadoVisitante = dados[15];
 
-                // Cria objeto Partida
                 Partida p = new Partida(
                         id,
                         mandante,
@@ -54,13 +51,9 @@ public class LeitorCsv {
                 );
                 partidas.add(p);
 
-                // Atualiza mapa de times (somente cria, não calcula estatísticas)
                 times.putIfAbsent(mandante, new Time(mandante, "", estadoMandante));
                 times.putIfAbsent(visitante, new Time(visitante, "", estadoVisitante));
 
-                // ❌ Remove atualização aqui!
-                // times.get(mandante).atualizarEstatisticas(p);
-                // times.get(visitante).atualizarEstatisticas(p);
             }
 
         } catch (IOException e) {

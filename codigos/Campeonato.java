@@ -8,7 +8,6 @@ public class Campeonato {
     private final List<Partida> partidas = new ArrayList<>();
     private final Map<String, Time> times = new HashMap<>();
 
-    // --------- Construtor ---------
     public Campeonato(
             List<Partida> partidas,
             Map<String, Time> times
@@ -16,7 +15,6 @@ public class Campeonato {
         this.partidas.addAll(partidas);
         this.times.putAll(times);
 
-        // Atualiza as estatísticas de cada time baseado nas partidas
         for (Partida p : partidas) {
             Time mandante = this.times.get(p.getMandante());
             if (mandante != null) mandante.atualizarEstatisticas(p);
@@ -26,7 +24,6 @@ public class Campeonato {
         }
     }
 
-    // --------- Métodos ---------
     public void adicionarPartida(Partida partida) {
         partidas.add(partida);
 
@@ -45,7 +42,6 @@ public class Campeonato {
         return times;
     }
 
-    // --------- Classificações ---------
     public List<Time> getClassificacaoPorGols() {
         return times.values().stream()
                 .sorted((a, b) -> b.getGolsPro() - a.getGolsPro())
@@ -76,7 +72,6 @@ public class Campeonato {
                 .collect(Collectors.toList());
     }
 
-    // --------- Filtros ---------
     public List<Partida> getPartidasPorAno(int ano) {
         return partidas.stream()
                 .filter(p -> {

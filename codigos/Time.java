@@ -16,17 +16,15 @@ public class Time {
     private int vitoriasVisitante = 0;
     private int partidasJogadas = 0;
 
-    // --------- Construtor ---------
     public Time(String nome, String tecnico, String estado) {
         this.nome = nome;
         this.tecnico = tecnico;
         this.estado = estado;
     }
 
-    // --------- Atualiza estatísticas ---------
     public void atualizarEstatisticas(Partida p) {
         if (p.getMandante().equals(nome)) {
-            // estatísticas como mandante
+
             golsPro += p.getPlacarMandante();
             golsContra += p.getPlacarVisitante();
             partidasJogadas++;
@@ -41,7 +39,7 @@ public class Time {
             }
 
         } else if (p.getVisitante().equals(nome)) {
-            // estatísticas como visitante
+
             golsPro += p.getPlacarVisitante();
             golsContra += p.getPlacarMandante();
             partidasJogadas++;
@@ -57,7 +55,7 @@ public class Time {
         }
     }
 
-    // --------- Getters ---------
+
     public String getNome() {
         return nome;
     }
@@ -94,7 +92,7 @@ public class Time {
         return partidasJogadas;
     }
 
-    // --------- Setters ---------
+
     public void setVitorias(int vitorias) {
         this.vitorias = vitorias;
     }
@@ -127,7 +125,7 @@ public class Time {
         this.partidasJogadas = partidasJogadas;
     }
 
-    // --------- Estatísticas calculadas ---------
+
     public int getPontuacao() {
         return vitorias * 3 + empates;
     }
@@ -142,7 +140,7 @@ public class Time {
                 : 0.0;
     }
 
-    // --------- Representação textual ---------
+
     @Override
     public String toString() {
         return nome + " (" + estado + ")" +

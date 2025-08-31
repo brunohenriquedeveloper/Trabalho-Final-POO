@@ -12,7 +12,6 @@ public class CalculoEstatistica extends AnaliseEstatistica {
         this.timesCache = inicializarTimes(campeonato.getPartidas());
     }
 
-    // ----------- Métodos públicos -----------
 
     @Override
     public List<Time> rankingPorPontos() {
@@ -53,27 +52,22 @@ public class CalculoEstatistica extends AnaliseEstatistica {
                 .collect(Collectors.toList());
     }
 
-    // ----------- Auxiliares -----------
 
-    /** Cria todos os times e atualiza estatísticas uma única vez */
     private Map<String, Time> inicializarTimes(List<Partida> partidas) {
         Map<String, Time> times = new LinkedHashMap<>();
         Set<Integer> partidasProcessadas = new HashSet<>();
 
-        // Primeiro, criar todos os times
         for (Partida p : partidas) {
             times.putIfAbsent(p.getMandante(), new Time(p.getMandante(), "", ""));
             times.putIfAbsent(p.getVisitante(), new Time(p.getVisitante(), "", ""));
         }
 
-        // Depois, processar as partidas sem duplicatas
         for (Partida p : partidas) {
             if (partidasProcessadas.contains(p.getId())) {
                 continue;
             }
             partidasProcessadas.add(p.getId());
 
-            // Atualizar estatísticas manualmente para evitar duplicação
             Time mandante = times.get(p.getMandante());
             Time visitante = times.get(p.getVisitante());
             
@@ -84,26 +78,22 @@ public class CalculoEstatistica extends AnaliseEstatistica {
         return times;
     }
 
-    /** Gera estatísticas filtradas por ano, criando novas instâncias temporárias */
     private Map<String, Time> gerarTimesPorAno(int ano) {
         Map<String, Time> timesAno = new LinkedHashMap<>();
         List<Partida> partidasAno = campeonato.getPartidasPorAno(ano);
         Set<Integer> partidasProcessadas = new HashSet<>();
 
-        // Primeiro, criar todos os times
         for (Partida p : partidasAno) {
             timesAno.putIfAbsent(p.getMandante(), new Time(p.getMandante(), "", ""));
             timesAno.putIfAbsent(p.getVisitante(), new Time(p.getVisitante(), "", ""));
         }
 
-        // Depois, processar as partidas sem duplicatas
         for (Partida p : partidasAno) {
             if (partidasProcessadas.contains(p.getId())) {
                 continue;
             }
             partidasProcessadas.add(p.getId());
 
-            // Atualizar estatísticas manualmente para evitar duplicação
             Time mandante = timesAno.get(p.getMandante());
             Time visitante = timesAno.get(p.getVisitante());
             
@@ -114,21 +104,19 @@ public class CalculoEstatistica extends AnaliseEstatistica {
         return timesAno;
     }
 
-    /** Atualiza estatísticas do time manualmente */
     private void atualizarEstatisticasTime(Time time, Partida p, boolean ehMandante) {
         int golsPro = ehMandante ? p.getPlacarMandante() : p.getPlacarVisitante();
         int golsContra = ehMandante ? p.getPlacarVisitante() : p.getPlacarMandante();
+
         
-        // Atualizar gols
         time.setGolsPro(time.getGolsPro() + golsPro);
         time.setGolsContra(time.getGolsContra() + golsContra);
         
-        // Determinar resultado
+
         String nomeTime = time.getNome();
         boolean venceu = p.getVencedor().equals(nomeTime);
         boolean empate = p.getVencedor().equals("Empate");
         
-        // Atualizar vitórias/empates/derrotas
         if (venceu) {
             time.setVitorias(time.getVitorias() + 1);
             if (ehMandante) {
@@ -142,7 +130,6 @@ public class CalculoEstatistica extends AnaliseEstatistica {
             time.setDerrotas(time.getDerrotas() + 1);
         }
         
-        // Atualizar partidas jogadas
         time.setPartidasJogadas(time.getPartidasJogadas() + 1);
     }
 }

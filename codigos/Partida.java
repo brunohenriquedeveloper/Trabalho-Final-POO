@@ -14,7 +14,7 @@ public class Partida {
     private int placarMandante;
     private int placarVisitante;
 
-    // --------- Construtor ---------
+
     public Partida(
             int id,
             String mandante,
@@ -37,7 +37,7 @@ public class Partida {
         this.placarVisitante = placarVisitante;
     }
 
-    // --------- Getters ---------
+
     public int getId() {
         return id;
     }
@@ -74,7 +74,7 @@ public class Partida {
         return placarVisitante;
     }
 
-    // --------- Equals e HashCode para detectar duplicatas ---------
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,7 +93,7 @@ public class Partida {
         return Objects.hash(id, mandante, visitante, data, placarMandante, placarVisitante);
     }
 
-    // --------- Representação textual ---------
+
     @Override
     public String toString() {
         return "Partida #" + id + ": " +
