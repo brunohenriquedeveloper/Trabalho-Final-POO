@@ -16,7 +16,7 @@ class LeitorCSV:
 
         with open(caminho, encoding="utf-8") as f:
             leitor = csv.reader(f)
-            next(leitor, None)  # pular cabeçalho
+            next(leitor, None)  
 
             for linha in leitor:
                 if not linha or len(linha) < 16:
@@ -52,7 +52,6 @@ class LeitorCSV:
                 )
                 partidas.append(p)
 
-                # Criar ou atualizar times
                 if mandante not in times:
                     times[mandante] = Time(nome=mandante, tecnico="", estado=estadoMandante)
                 if visitante not in times:

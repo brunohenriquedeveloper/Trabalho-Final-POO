@@ -1,4 +1,3 @@
-from typing import Union
 from .Partida import Partida  
 
 class Time:

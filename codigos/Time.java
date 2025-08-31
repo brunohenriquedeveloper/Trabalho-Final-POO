@@ -1,6 +1,7 @@
 package codigos;
 
 public class Time {
+
     private String nome;
     private String tecnico;
     private String estado;
@@ -11,7 +12,6 @@ public class Time {
     private int golsPro = 0;
     private int golsContra = 0;
 
-    // Novos atributos para estatísticas adicionais
     private int vitoriasMandante = 0;
     private int vitoriasVisitante = 0;
     private int partidasJogadas = 0;
@@ -22,9 +22,9 @@ public class Time {
         this.estado = estado;
     }
 
-    // Atualiza estatísticas com base em uma partida
     public void atualizarEstatisticas(Partida p) {
         if (p.getMandante().equals(nome)) {
+
             golsPro += p.getPlacarMandante();
             golsContra += p.getPlacarVisitante();
             partidasJogadas++;
@@ -39,6 +39,7 @@ public class Time {
             }
 
         } else if (p.getVisitante().equals(nome)) {
+
             golsPro += p.getPlacarVisitante();
             golsContra += p.getPlacarMandante();
             partidasJogadas++;
@@ -54,6 +55,77 @@ public class Time {
         }
     }
 
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getVitorias() {
+        return vitorias;
+    }
+
+    public int getEmpates() {
+        return empates;
+    }
+
+    public int getDerrotas() {
+        return derrotas;
+    }
+
+    public int getGolsPro() {
+        return golsPro;
+    }
+
+    public int getGolsContra() {
+        return golsContra;
+    }
+
+    public int getVitoriasMandante() {
+        return vitoriasMandante;
+    }
+
+    public int getVitoriasVisitante() {
+        return vitoriasVisitante;
+    }
+
+    public int getPartidasJogadas() {
+        return partidasJogadas;
+    }
+
+
+    public void setVitorias(int vitorias) {
+        this.vitorias = vitorias;
+    }
+
+    public void setEmpates(int empates) {
+        this.empates = empates;
+    }
+
+    public void setDerrotas(int derrotas) {
+        this.derrotas = derrotas;
+    }
+
+    public void setGolsPro(int golsPro) {
+        this.golsPro = golsPro;
+    }
+
+    public void setGolsContra(int golsContra) {
+        this.golsContra = golsContra;
+    }
+
+    public void setVitoriasMandante(int vitoriasMandante) {
+        this.vitoriasMandante = vitoriasMandante;
+    }
+
+    public void setVitoriasVisitante(int vitoriasVisitante) {
+        this.vitoriasVisitante = vitoriasVisitante;
+    }
+
+    public void setPartidasJogadas(int partidasJogadas) {
+        this.partidasJogadas = partidasJogadas;
+    }
+
+
     public int getPontuacao() {
         return vitorias * 3 + empates;
     }
@@ -63,29 +135,25 @@ public class Time {
     }
 
     public double getMediaGolsSofridos() {
-        return partidasJogadas > 0 ? (double) golsContra / partidasJogadas : 0.0;
+        return partidasJogadas > 0
+                ? (double) golsContra / partidasJogadas
+                : 0.0;
     }
 
-    public int getGolsPro() { return golsPro; }
 
-    public int getGolsContra() { return golsContra; }
-
-    public int getVitoriasMandante() { return vitoriasMandante; }
-
-    public int getVitoriasVisitante() { return vitoriasVisitante; }
-
-    public String getNome() { return nome; }
-
-@Override
-public String toString() {
-    return nome + " (" + estado + ")" +
-           " - Pontos: " + getPontuacao() +
-           ", Jogos: " + partidasJogadas +
-           " (V: " + vitorias + ", E: " + empates + ", D: " + derrotas + ")" +
-           ", Gols: " + golsPro + ":" + golsContra +
-           ", Saldo: " + getSaldoGols() +
-           ", Vitórias Casa: " + vitoriasMandante +
-           ", Vitórias Fora: " + vitoriasVisitante +
-           ", Média Gols Sofridos: " + String.format("%.2f", getMediaGolsSofridos());
-}
+    @Override
+    public String toString() {
+        return nome + " (" + estado + ")" +
+                " – Pontos: " + getPontuacao() +
+                ", Jogos: " + partidasJogadas +
+                " (V: " + vitorias +
+                ", E: " + empates +
+                ", D: " + derrotas + ")" +
+                ", Gols: " + golsPro + ":" + golsContra +
+                ", Saldo: " + getSaldoGols() +
+                ", Vitórias Casa: " + vitoriasMandante +
+                ", Vitórias Fora: " + vitoriasVisitante +
+                ", Média Sofridos: " +
+                String.format("%.2f", getMediaGolsSofridos());
+    }
 }

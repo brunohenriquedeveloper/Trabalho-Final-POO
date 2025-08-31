@@ -8,16 +8,15 @@ import pyqtgraph as pg
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 
 from codigosPython.Campeonato import Campeonato
-from codigosPython.AnaliseEstatistica import AnaliseEstatistica
+from codigosPython.CalculoEstatistica import CalculoEstatistica
 from codigosPython.Time import Time
 from codigosPython.LeitorCSV import LeitorCSV
-
 
 class MainGui(QtWidgets.QMainWindow):
     def __init__(self, campeonato: Campeonato):
         super().__init__()
         self.campeonato = campeonato
-        self.analise = AnaliseEstatistica(campeonato)
+        self.analise = CalculoEstatistica(campeonato)
 
         self.setWindowTitle("Campeonato Brasileiro – Estatísticas")
         self.setGeometry(100, 100, 1200, 650)
@@ -26,7 +25,6 @@ class MainGui(QtWidgets.QMainWindow):
         self.setCentralWidget(central)
         mainLayout = QtWidgets.QVBoxLayout(central)
 
-        # Topo com ano e botões
         topo = QtWidgets.QHBoxLayout()
         mainLayout.addLayout(topo)
 
@@ -50,7 +48,6 @@ class MainGui(QtWidgets.QMainWindow):
         ):
             topo.addWidget(btn)
 
-        # Área de gráficos
         self.plotWidget = pg.PlotWidget()
         self.plotWidget.setBackground("w")
         mainLayout.addWidget(self.plotWidget)
@@ -60,22 +57,21 @@ class MainGui(QtWidgets.QMainWindow):
         mainLayout.addWidget(self.pizzaContainer)
         self.pizzaContainer.hide()
 
-        # Conexões
         self.btnGols.clicked.connect(lambda:
             self.desenharGrafico(
-                self.campeonato.getClassificacaoPorGols(),
+                self.analise.melhorAtaqueGeral(10),
                 "golsPro", "bar"
             )
         )
         self.btnPontos.clicked.connect(lambda:
             self.desenharGrafico(
-                self.campeonato.getClassificacaoPorPontos(),
+                self.analise.rankingPorPontos(),
                 "pontos", "barh"
             )
         )
         self.btnSaldo.clicked.connect(lambda:
             self.desenharGrafico(
-                self.campeonato.getClassificacaoPorSaldoGols(),
+                self.analise.rankingPorMediaGolsSofridos(),
                 "saldoGols", "line"
             )
         )
@@ -87,13 +83,13 @@ class MainGui(QtWidgets.QMainWindow):
         )
         self.btnVitMand.clicked.connect(lambda:
             self.desenharGrafico(
-                self.campeonato.getClassificacaoPorVitoriasMandante(),
+                self.analise.topVitoriasMandante(10),
                 "vitoriasMandante", "bar"
             )
         )
         self.btnVitVis.clicked.connect(lambda:
             self.desenharGrafico(
-                self.campeonato.getClassificacaoPorVitoriasVisitante(),
+                self.analise.topVitoriasVisitante(10),
                 "vitoriasVisitante", "barh"
             )
         )
@@ -151,6 +147,14 @@ class MainGui(QtWidgets.QMainWindow):
         self.plotWidget.show()
         plotItem.clear()
 
+        if estilo == "line":
+            if tipo == "defesa": 
+                lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo))[:10]
+            elif tipo == "saldoGols": 
+                lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo), reverse=True)[:10]
+            else:
+                lista = sorted(lista, key=lambda t: self.pegarValor(t, tipo), reverse=True)[:20]
+
         bottom_axis = plotItem.getAxis('bottom')
         left_axis = plotItem.getAxis('left')
 
@@ -179,11 +183,11 @@ class MainGui(QtWidgets.QMainWindow):
         valores = [self.pegarValor(t, tipo) for t in lista]
         brush = pg.mkBrush(*self.pegarCor(tipo))
 
-        pares = sorted(zip(nomes, valores), key=lambda nv: nv[1], reverse=True)[:10]
-        nomes, valores = zip(*pares)
-        max_val = max(valores) * 1.1
-
         if estilo == "bar":
+            pares = sorted(zip(nomes, valores), key=lambda nv: nv[1], reverse=True)[:10]
+            nomes, valores = zip(*pares)
+            max_val = max(valores) * 1.1
+
             bg = pg.BarGraphItem(
                 x=range(len(valores)), height=valores,
                 width=0.6, brush=brush
@@ -205,6 +209,10 @@ class MainGui(QtWidgets.QMainWindow):
             plotItem.enableAutoRange(False, False)
 
         elif estilo == "barh":
+            pares = sorted(zip(nomes, valores), key=lambda nv: nv[1], reverse=True)[:10]
+            nomes, valores = zip(*pares)
+            max_val = max(valores) * 1.1
+
             plotItem.getViewBox().invertY(True)
             bg = pg.BarGraphItem(
                 y=range(len(valores)), x0=0, x1=valores,
@@ -226,7 +234,7 @@ class MainGui(QtWidgets.QMainWindow):
             self.plotWidget.setXRange(0, max_val)
             plotItem.enableAutoRange(False, False)
 
-        else:  # line
+        else:  
             x = list(range(len(valores)))
             self.plotWidget.plot(
                 x, valores,
@@ -234,9 +242,8 @@ class MainGui(QtWidgets.QMainWindow):
                 symbol="o", symbolBrush=brush
             )
 
-            ax = bottom_axis
-            ax.setTicks([list(zip(x, nomes))])
-            ax.setStyle(tickFont=QtGui.QFont("Arial", 8), tickTextOffset=10)
+            bottom_axis.setTicks([list(zip(x, nomes))])
+            bottom_axis.setStyle(tickFont=QtGui.QFont("Arial", 8), tickTextOffset=10)
 
             for i, v in enumerate(valores):
                 txt = pg.TextItem(str(v), anchor=(0.5, -1.0), color=(0, 0, 0))
@@ -245,11 +252,10 @@ class MainGui(QtWidgets.QMainWindow):
                 self.plotWidget.addItem(txt)
 
             self.plotWidget.setXRange(-0.5, len(valores) - 0.5)
-            self.plotWidget.setYRange(0, max_val)
+            self.plotWidget.setYRange(0, max(valores)*1.1)  
             plotItem.enableAutoRange(False, False)
 
     def mostrarPizza(self, lista, tipo):
-        # Remove widgets antigos
         for i in reversed(range(self.pizzaLayout.count())):
             w = self.pizzaLayout.itemAt(i).widget()
             if w:
@@ -261,7 +267,6 @@ class MainGui(QtWidgets.QMainWindow):
 
         series = QPieSeries()
         for i, (nome, valor) in enumerate(zip(nomes, valores)):
-            # Label no formato pedido: Nome XX.X% | YY gols
             label = f"{nome} {valor/total*100:.1f}% | {valor} gols"
             slice = QPieSlice(label, valor)
             color = pg.intColor(i, hues=len(lista))
@@ -274,7 +279,6 @@ class MainGui(QtWidgets.QMainWindow):
         chart.addSeries(series)
         chart.setTitle(f"Melhor {tipo.capitalize()} por Time")
 
-        # Legenda lateral
         legend = chart.legend()
         legend.setVisible(True)
         legend.setAlignment(QtCore.Qt.AlignRight)

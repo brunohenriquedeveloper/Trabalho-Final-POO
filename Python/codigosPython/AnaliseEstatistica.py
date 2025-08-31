@@ -1,101 +1,77 @@
+from abc import ABC, abstractmethod
 from typing import List, Dict, Optional
 from .Campeonato import Campeonato
 from .Time import Time
-from .Partida import Partida
 
-class AnaliseEstatistica:
+
+class AnaliseEstatistica(ABC):
     def __init__(self, campeonato: Campeonato):
         self.campeonato = campeonato
 
+    @abstractmethod
     def gerarTimes(self) -> Dict[str, Time]:
-        times: Dict[str, Time] = {}
-        for p in self.campeonato.getPartidas():
-            if p.mandante not in times:
-                times[p.mandante] = Time(p.mandante, "", "")
-            if p.visitante not in times:
-                times[p.visitante] = Time(p.visitante, "", "")
-            times[p.mandante].atualizarEstatisticas(p)
-            times[p.visitante].atualizarEstatisticas(p)
-        return times
+        pass
 
+    @abstractmethod
     def rankingPorPontos(self) -> List[Time]:
-        ranking = list(self.gerarTimes().values())
-        ranking.sort(key=lambda t: t.getPontuacao(), reverse=True)
-        return ranking
+        pass
 
+    @abstractmethod
     def timeComMaisGols(self) -> Optional[Time]:
-        times = self.gerarTimes().values()
-        return max(times, key=lambda t: t.golsPro, default=None)
+        pass
 
+    @abstractmethod
     def melhorDefesaGeral(self) -> Optional[Time]:
-        times = self.gerarTimes().values()
-        return min(times, key=lambda t: t.golsContra, default=None)
+        pass
 
+    @abstractmethod
     def rankingPorMediaGolsSofridos(self) -> List[Time]:
-        ranking = list(self.gerarTimes().values())
-        ranking.sort(key=lambda t: t.getMediaGolsSofridos())
-        return ranking
+        pass
 
+    @abstractmethod
     def maisVitoriasMandanteGeral(self) -> Optional[Time]:
-        times = self.gerarTimes().values()
-        return max(times, key=lambda t: t.vitoriasMandante, default=None)
+        pass
 
+    @abstractmethod
     def maisVitoriasVisitanteGeral(self) -> Optional[Time]:
-        times = self.gerarTimes().values()
-        return max(times, key=lambda t: t.vitoriasVisitante, default=None)
+        pass
 
+    @abstractmethod
     def gerarTimesPorAno(self, ano: int) -> Dict[str, Time]:
-        times: Dict[str, Time] = {}
-        partidasDoAno = self.campeonato.getPartidasPorAno(ano)
-        for p in partidasDoAno:
-            if p.mandante not in times:
-                times[p.mandante] = Time(p.mandante, "", "")
-            if p.visitante not in times:
-                times[p.visitante] = Time(p.visitante, "", "")
-            times[p.mandante].atualizarEstatisticas(p)
-            times[p.visitante].atualizarEstatisticas(p)
-        return times
+        pass
 
+    @abstractmethod
     def melhoresDefesasPorAno(self, ano: int, top: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsContra)  
-        return times[:top]
+        pass
 
+    @abstractmethod
     def melhorDefesaPorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsContra)
-        return times
+        pass
 
+    @abstractmethod
     def melhorDefesaTop1PorAno(self, ano: int) -> Optional[Time]:
-        lista = self.melhorDefesaPorAno(ano)
-        return lista[0] if lista else None
+        pass
 
+    @abstractmethod
     def maisVitoriasMandantePorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.vitoriasMandante, reverse=True)
-        return times
+        pass
 
+    @abstractmethod
     def maisVitoriasVisitantePorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.vitoriasVisitante, reverse=True)
-        return times
+        pass
 
+    @abstractmethod
     def melhorAtaqueGeral(self, top: int) -> List[Time]:
-        times = list(self.gerarTimes().values())
-        times.sort(key=lambda t: t.golsPro, reverse=True)
-        return times[:top]
+        pass
 
+    @abstractmethod
     def melhorAtaquePorAno(self, ano: int, top: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsPro, reverse=True)
-        return times[:top]
+        pass
 
+    @abstractmethod
     def topVitoriasMandante(self, top: int) -> List[Time]:
-        times = list(self.gerarTimes().values())
-        times.sort(key=lambda t: t.vitoriasMandante, reverse=True)
-        return times[:top]
+        pass
 
+    @abstractmethod
     def topVitoriasVisitante(self, top: int) -> List[Time]:
-        times = list(self.gerarTimes().values())
-        times.sort(key=lambda t: t.vitoriasVisitante, reverse=True)
-        return times[:top]
+        pass
