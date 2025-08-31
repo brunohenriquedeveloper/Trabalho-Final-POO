@@ -10,62 +10,79 @@ class Partida:
         placarMandante: int,
         placarVisitante: int
     ):
-        self.mandante = mandante
-        self.visitante = visitante
-        self.estadio = estadio
-        self.data = data
-        self.hora = hora
-        self.vencedor = vencedor
-        self.placarMandante = placarMandante
-        self.placarVisitante = placarVisitante
+        self._mandante = mandante
+        self._visitante = visitante
+        self._estadio = estadio
+        self._data = data
+        self._hora = hora
+        self._vencedor = vencedor
+        self._placarMandante = placarMandante
+        self._placarVisitante = placarVisitante
 
-    def getMandante(self) -> str:
-        return self.mandante
+    # Getters e Setters
+    @property
+    def mandante(self) -> str:
+        return self._mandante
 
-    def setMandante(self, mandante: str):
-        self.mandante = mandante
+    @mandante.setter
+    def mandante(self, valor: str):
+        self._mandante = valor
 
-    def getVisitante(self) -> str:
-        return self.visitante
+    @property
+    def visitante(self) -> str:
+        return self._visitante
 
-    def setVisitante(self, visitante: str):
-        self.visitante = visitante
+    @visitante.setter
+    def visitante(self, valor: str):
+        self._visitante = valor
 
-    def getEstadio(self) -> str:
-        return self.estadio
+    @property
+    def estadio(self) -> str:
+        return self._estadio
 
-    def setEstadio(self, estadio: str):
-        self.estadio = estadio
+    @estadio.setter
+    def estadio(self, valor: str):
+        self._estadio = valor
 
-    def getData(self) -> str:
-        return self.data
+    @property
+    def data(self) -> str:
+        return self._data
 
-    def setData(self, data: str):
-        self.data = data
+    @data.setter
+    def data(self, valor: str):
+        self._data = valor
 
-    def getHora(self) -> str:
-        return self.hora
+    @property
+    def hora(self) -> str:
+        return self._hora
 
-    def setHora(self, hora: str):
-        self.hora = hora
+    @hora.setter
+    def hora(self, valor: str):
+        self._hora = valor
 
-    def getVencedor(self) -> str:
-        return self.vencedor
+    @property
+    def vencedor(self) -> str:
+        return self._vencedor
 
-    def setVencedor(self, vencedor: str):
-        self.vencedor = vencedor
+    @vencedor.setter
+    def vencedor(self, valor: str):
+        self._vencedor = valor
 
-    def getPlacarMandante(self) -> int:
-        return self.placarMandante
+    @property
+    def placarMandante(self) -> int:
+        return self._placarMandante
 
-    def setPlacarMandante(self, placarMandante: int):
-        self.placarMandante = placarMandante
+    @placarMandante.setter
+    def placarMandante(self, valor: int):
+        self._placarMandante = valor
 
-    def getPlacarVisitante(self) -> int:
-        return self.placarVisitante
+    @property
+    def placarVisitante(self) -> int:
+        return self._placarVisitante
 
-    def setPlacarVisitante(self, placarVisitante: int):
-        self.placarVisitante = placarVisitante
+    @placarVisitante.setter
+    def placarVisitante(self, valor: int):
+        self._placarVisitante = valor
 
     def __str__(self) -> str:
-        return f"{self.mandante} {self.placarMandante} x {self.placarVisitante} {self.visitante}"
+        return f"{self._mandante} {self._placarMandante} x {self._placarVisitante} {self._visitante}"

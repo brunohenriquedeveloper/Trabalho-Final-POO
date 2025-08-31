@@ -7,7 +7,7 @@ class CalculoEstatistica(AnaliseEstatistica):
         super().__init__(campeonato)
 
         self._times: Dict[str, Time] = {}
-        for p in self.campeonato.getPartidas():
+        for p in self.campeonato.partidas: 
             if p.mandante not in self._times:
                 self._times[p.mandante] = Time(p.mandante, "", "")
             if p.visitante not in self._times:
@@ -19,9 +19,7 @@ class CalculoEstatistica(AnaliseEstatistica):
         return self._times
 
     def rankingPorPontos(self) -> List[Time]:
-        ranking = list(self._times.values())
-        ranking.sort(key=lambda t: t.getPontuacao(), reverse=True)
-        return ranking
+        return sorted(self._times.values(), key=lambda t: t.getPontuacao(), reverse=True)
 
     def timeComMaisGols(self) -> Optional[Time]:
         return max(self._times.values(), key=lambda t: t.golsPro, default=None)
@@ -30,9 +28,7 @@ class CalculoEstatistica(AnaliseEstatistica):
         return min(self._times.values(), key=lambda t: t.golsContra, default=None)
 
     def rankingPorMediaGolsSofridos(self) -> List[Time]:
-        ranking = list(self._times.values())
-        ranking.sort(key=lambda t: t.getMediaGolsSofridos())
-        return ranking
+        return sorted(self._times.values(), key=lambda t: t.getMediaGolsSofridos())
 
     def maisVitoriasMandanteGeral(self) -> Optional[Time]:
         return max(self._times.values(), key=lambda t: t.vitoriasMandante, default=None)
@@ -41,24 +37,17 @@ class CalculoEstatistica(AnaliseEstatistica):
         return max(self._times.values(), key=lambda t: t.vitoriasVisitante, default=None)
 
     def melhorAtaqueGeral(self, top: int) -> List[Time]:
-        times = list(self._times.values())
-        times.sort(key=lambda t: t.golsPro, reverse=True)
-        return times[:top]
+        return sorted(self._times.values(), key=lambda t: t.golsPro, reverse=True)[:top]
 
     def topVitoriasMandante(self, top: int) -> List[Time]:
-        times = list(self._times.values())
-        times.sort(key=lambda t: t.vitoriasMandante, reverse=True)
-        return times[:top]
+        return sorted(self._times.values(), key=lambda t: t.vitoriasMandante, reverse=True)[:top]
 
     def topVitoriasVisitante(self, top: int) -> List[Time]:
-        times = list(self._times.values())
-        times.sort(key=lambda t: t.vitoriasVisitante, reverse=True)
-        return times[:top]
-    
+        return sorted(self._times.values(), key=lambda t: t.vitoriasVisitante, reverse=True)[:top]
 
     def gerarTimesPorAno(self, ano: int) -> Dict[str, Time]:
         times: Dict[str, Time] = {}
-        partidasDoAno = self.campeonato.getPartidasPorAno(ano)
+        partidasDoAno = self.campeonato.getPartidasPorAno(ano)  
         for p in partidasDoAno:
             if p.mandante not in times:
                 times[p.mandante] = Time(p.mandante, "", "")
@@ -69,30 +58,20 @@ class CalculoEstatistica(AnaliseEstatistica):
         return times
 
     def melhoresDefesasPorAno(self, ano: int, top: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsContra)
-        return times[:top]
+        return sorted(self.gerarTimesPorAno(ano).values(), key=lambda t: t.golsContra)[:top]
 
     def melhorDefesaPorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsContra)
-        return times
+        return sorted(self.gerarTimesPorAno(ano).values(), key=lambda t: t.golsContra)
 
     def melhorDefesaTop1PorAno(self, ano: int) -> Optional[Time]:
         lista = self.melhorDefesaPorAno(ano)
         return lista[0] if lista else None
 
     def maisVitoriasMandantePorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.vitoriasMandante, reverse=True)
-        return times
+        return sorted(self.gerarTimesPorAno(ano).values(), key=lambda t: t.vitoriasMandante, reverse=True)
 
     def maisVitoriasVisitantePorAno(self, ano: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.vitoriasVisitante, reverse=True)
-        return times
+        return sorted(self.gerarTimesPorAno(ano).values(), key=lambda t: t.vitoriasVisitante, reverse=True)
 
     def melhorAtaquePorAno(self, ano: int, top: int) -> List[Time]:
-        times = list(self.gerarTimesPorAno(ano).values())
-        times.sort(key=lambda t: t.golsPro, reverse=True)
-        return times[:top]
+        return sorted(self.gerarTimesPorAno(ano).values(), key=lambda t: t.golsPro, reverse=True)[:top]
